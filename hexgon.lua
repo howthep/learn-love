@@ -1,4 +1,5 @@
 local Object=require('classic')
+local Vec=require('vec')
 local Hexgon=Object:extend()
 
 function Hexgon:new(x,y,r)
@@ -27,9 +28,13 @@ local HexGrid=Object:extend()
 function HexGrid:new(x,y)
     self.x=x
     self.y=y
+    self.size=20.0
 end
 function HexGrid:cube2vec(q,r,s)
-    
+    -- q  r  s
+    --    o
+    -- -s -r -q
+    local x,y=0,0
 end
 function HexGrid:draw()
     local size = 20.0
