@@ -1,34 +1,43 @@
+local rotation=0
 function love.draw()
-    for i=1,#fruits do
-        love.graphics.print(fruits[i],400,300+i*30,0,3)
+    -- love.graphics.print("hi love",400,300)
+    love.graphics.setColor(1,.5,.5)
+    for i=1,#Shapes do
+        Shapes[i]:draw()
     end
-    love.graphics.print("hi love",400,300)
-    love.graphics.rectangle('fill',x,100,100,100)
+    love.graphics.setColor(1,1,1)
+    love.graphics.draw(Img,100,300,rotation)
 end
 function love.update(dt)
-    local v =400
-    if not sound:isPlaying() then
-        love.audio.play(sound)
+    rotation=rotation+dt*2
+    for i=1,#Shapes do
+        Shapes[i]:move(dt)
     end
-    _x,y,w ,h= love.window.getSafeArea()
-    if love.keyboard.isDown('right') then
-        x = x + v * dt
-    else
-        x = x - v * dt
-    end
-    x=x%w
+end
+
+function love.load()
+    love.graphics.setBackgroundColor(.1,.1,.1)
+    love.graphics.setLineWidth(4)
+
+    local Shape = require("shape")
+    local Hex=require("hexgon")
+    local Rec = Shape.Rect(100,100,100,100,300)
+    local Cir = Shape.Circle(100,200,100,200)
+    -- local hex=Hex.Hexgon(200,300,40)
+    local hex=Hex.HexGrid(200,300)
+    Shapes={Rec,Cir,hex}
+
+    -- Sound = love.audio.newSource('beat.wav','static')
+    Img = love.graphics.newImage('sheep.png')
+
+
+end
+function love.mousemoved(x,y)
+    Shapes[3].x=x
+    Shapes[3].y=y
 end
 function love.keypressed(key,scancode,isrepeat)
     if key =='escape'then
         love.event.quit(0)
     end
-end
-
-function love.load()
-    sound = love.audio.newSource('beat.wav','static')
-    x=100
-    fruits  ={'apple','banana'}
-    table.insert(fruits,'orange')
-    table.insert(fruits,'lemon')
-    table.remove(fruits,2)
 end
