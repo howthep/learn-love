@@ -2,9 +2,8 @@ local Object=require('classic')
 local Vec=require('vec')
 local Hexgon=Object:extend()
 
-function Hexgon:new(x,y,r)
-    self.x=x
-    self.y=y
+function Hexgon:new(vec,r)
+    self.center=vec
     self.r=r
 end
 
@@ -25,9 +24,8 @@ function Hexgon:move(dt)
 end
 
 local HexGrid=Object:extend()
-function HexGrid:new(x,y)
-    self.x=x
-    self.y=y
+function HexGrid:new(vec)
+    self.center=vec
     self.size=20.0
 end
 function HexGrid:cube2vec(q,r,s)
@@ -38,7 +36,8 @@ function HexGrid:cube2vec(q,r,s)
 end
 function HexGrid:draw()
     local size = 20.0
-    local hexgon=Hexgon(self.x,self.y,size)
+    local center= self.center
+    local hexgon=Hexgon(center,size)
     local n=10
     for i=1,n do
         hexgon:draw()
