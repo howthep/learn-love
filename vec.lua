@@ -1,5 +1,8 @@
 local Object=require('classic')
 local Vec = Object:extend()
+local function degree2radian(degree)
+    return degree/180*math.pi
+end
 
 function Vec:new(x,y)
     self.x=x or 0
@@ -8,6 +11,16 @@ end
 function Vec:__add( new_vec)
     local x, y = self.x + new_vec.x, self.y + new_vec.y
     return Vec(x,y)
+end
+function Vec:set(vec,y)
+    if type(y)=="number" then
+        local x= vec
+        self.x=x
+        self.y=y
+    else
+        self.x = vec.x
+        self.y = vec.y
+    end
 end
 function Vec:__mul(mul)
     local x,y=self:unpack()
@@ -78,12 +91,14 @@ function Vec:theta(is_degree)
     local x,y=self:unpack()
     local basic_theta= math.atan2(y,x)
     if is_degree then
-        basic_theta =basic_theta/math.pi*180
+        basic_theta =degree2radian(basic_theta)
     end
     return basic_theta
 end
-function Vec:rotate(theta)
-    -- theta is radian
+function Vec:rotate(theta,is_degree)
+    if is_degree then
+        theta=degree2radian(theta)
+    end
     local current_theta = self:theta()
     theta=theta+current_theta
     local len=self:len()

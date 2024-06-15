@@ -13,7 +13,7 @@ function Hexgon:draw()
     local theta=60/180*math.pi
     for i=0,6 do
         local itheta=i*theta
-        local x,y=self.x+r*math.cos(itheta),self.y+r*math.sin(itheta)
+        local x,y=self.center.x+r*math.cos(itheta),self.center.y+r*math.sin(itheta)
         table.insert(xys,x)
         table.insert(xys,y)
     end
@@ -26,23 +26,37 @@ end
 local HexGrid=Object:extend()
 function HexGrid:new(vec)
     self.center=vec
-    self.size=20.0
+    self.size=20.0 -- radius of outer circle 
+    self.rotate=0
 end
 function HexGrid:cube2vec(q,r,s)
-    -- q  r  s
-    --    o
-    -- -s -r -q
-    local x,y=0,0
+    --      ^
+    --   q     r
+    -- |         |
+    -- s    o    s
+    -- |         |
+    --   -r   -q
+    --      v
+    local base_angle=30
+    local q_vec=Vec(1,0):rotate(base_angle,true)
+    local r_vec=Vec(1,0):rotate(base_angle+60,true)
+    local step = self.size*math.sqrt(3)
+    local center=self.center
+    local ret= center+q_vec*step*q+r_vec*step*r
+    -- print(ret)
+    return ret
 end
 function HexGrid:draw()
-    local size = 20.0
-    local center= self.center
-    local hexgon=Hexgon(center,size)
-    local n=10
-    for i=1,n do
+    local size = self.size
+    local hexgon=Hexgon(self.center:clone(),size)
+    hexgon:draw()
+    local center= hexgon.center
+    local n=5
+    for i=-n,n do
+        for j=-n,n  do
+        center:set(self:cube2vec(i,j))
         hexgon:draw()
-        hexgon.x=hexgon.x+size*1.5
-        hexgon.y=hexgon.y+size*math.sqrt(3)/2
+        end
     end
 end
 function HexGrid:move(dt)
