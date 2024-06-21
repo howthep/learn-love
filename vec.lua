@@ -12,6 +12,9 @@ function Vec:__add( new_vec)
     local x, y = self.x + new_vec.x, self.y + new_vec.y
     return Vec(x,y)
 end
+function Vec:__sub(new_vec)
+    return self+new_vec*-1
+end
 function Vec:set(vec,y)
     if type(y)=="number" then
         local x= vec

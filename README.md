@@ -1,6 +1,6 @@
 # learn-love
 ##
-- todo: practice some animation principle
+- todo: practice some animation principle, stretch, anticipation
 - todo: rewrite classic.lua, `__index` should be carefully done
 ## note
 - use `Array:push`, DO NOT use `Array.push`
