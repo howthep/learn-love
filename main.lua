@@ -5,20 +5,23 @@ local Shape = require("shape")
 local Hex=require("hexgon")
 local Sprite=require('sprite')
 local config={}
-local Shapes={}
 local sheep
 local velocity=Vec()
+local Img
+local frames={}
+local T=0
+local player
 
 function love.draw()
     -- love.graphics.print("hi love",400,300)
-    love.graphics.setColor(1,.5,.5)
-    for k,v in pairs(Shapes) do
-        v:draw()
-    end
     love.graphics.setColor(1,1,1)
     sheep:draw()
+    local dt=1/12*3
+    local frame_id = math.floor(T/dt)%#player.frames+1
+    player:draw(frame_id)
 end
 function love.update(dt)
+    T=T+dt
     local mx,my=love.mouse.getPosition()
     local direction = Vec(mx,my)-sheep.center
     local speed = 7
@@ -26,28 +29,20 @@ function love.update(dt)
     velocity = velocity + attract_force
     local rotation=-math.pi/2+velocity:theta()
     sheep.rotation=rotation
-    sheep:move(velocity)
-    for i=1,#Shapes do
-        Shapes[i]:move(dt)
-    end
+    -- sheep:move(velocity)
 end
 
 function love.load()
     love.graphics.setBackgroundColor(.1,.1,.1)
     love.graphics.setLineWidth(4)
 
-    local Rec = Shape.Rect(100,100,100,100,300)
-    local Cir = Shape.Circle(100,200,100,200)
-    -- local hex=Hex.Hexgon(200,300,40)
-    local p_center = Vec(200,200)
-    local hex=Hex.HexGrid(p_center,300)
-    -- Shapes={Rec,Cir,hex=hex}
-
     -- Sound = love.audio.newSource('beat.wav','static')
 
     config.w,config.h,_=love.window.getMode()
     local img_center=Vec(config.w/2,config.h/2)
-    sheep=Sprite(img_center)
+    sheep=Sprite(img_center,'sheep.png')
+    player=Sprite(Vec(300,100),'jump.png',{quad={117,233,5}})
+
 end
 function love.mousemoved(x,y)
     -- Shapes.hex.center:set(x,y)
