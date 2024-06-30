@@ -1,5 +1,7 @@
 # learn-love
 ##
+- keep
+##
 - todo: practice some animation principle, stretch, anticipation
 - todo: rewrite classic.lua, `__index` should be carefully done
 ## note
