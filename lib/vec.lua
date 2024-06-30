@@ -8,6 +8,13 @@ function Vec:new(x,y)
     self.x=x or 0
     self.y=y or 0
 end
+function  Vec:project(vec)
+    return self:dot(vec:normal())
+    
+end
+function Vec:dot(vec)
+    return self.x*vec.x + self.y*vec.y
+end
 function Vec:__add( new_vec)
     local x, y = self.x + new_vec.x, self.y + new_vec.y
     return Vec(x,y)
@@ -88,7 +95,6 @@ function Vec:normal()
         return nil
     end
     return self:clone()/len
-    
 end
 function Vec:theta(is_degree)
     local x,y=self:unpack()
