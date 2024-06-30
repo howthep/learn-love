@@ -2,5 +2,6 @@
     "Lua.diagnostics.globals": [
         "love"
     ],
-    "Lua.runtime.version": "Lua 5.1"
+    "Lua.runtime.version": "Lua 5.1",
+    "pixelbyte.love2d.srcDir": "."
 }

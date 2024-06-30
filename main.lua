@@ -1,4 +1,5 @@
 -- require('lldebugger').start()
+package.path=package.path.. './lib/?.lua'
 print(_VERSION)
 local Vec= require("vec")
 local Shape = require("shape")
@@ -9,10 +10,28 @@ local sheep
 local velocity=Vec()
 local Img
 local frames={}
-local T=0
+local T=1
 local player
 
 function love.draw()
+    love.graphics.print(T, 10, 10)
+    love.graphics.print(package.path, 10, config.h-20)
+    if T > 1 then
+        local row, col = 5, 5
+        for i = 0, row do
+            for j = 0, col do
+                local v = math.random()
+                local mode = 'line'
+                love.graphics.rectangle(mode, j * 100, i*100, 100, 100)
+                if v > .5 then
+                    mode = 'fill'
+                    love.graphics.rectangle(mode, j * 100, i*100, 100, 100)
+                end
+            end
+        end
+    end
+end
+function love.draw_()
     -- love.graphics.print("hi love",400,300)
     love.graphics.setColor(1,1,1)
     sheep:draw()
