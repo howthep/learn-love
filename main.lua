@@ -5,49 +5,60 @@ local Vec= require("vec")
 local Shape = require("shape")
 local Hex=require("hexgon")
 local Sprite=require('sprite')
+local Trans=require('transform')
 local config={}
-local sheep
-local velocity=Vec()
-local Img
-local frames={}
 local T=1
-local player
-
-function love.draw()
-    love.graphics.print(T, 10, 10)
-    love.graphics.print(package.path, 10, config.h-20)
-    if T > 1 then
-        local row, col = 5, 5
-        for i = 0, row do
-            for j = 0, col do
-                local v = math.random()
-                local mode = 'line'
-                love.graphics.rectangle(mode, j * 100, i*100, 100, 100)
-                if v > .5 then
-                    mode = 'fill'
-                    love.graphics.rectangle(mode, j * 100, i*100, 100, 100)
-                end
-            end
-        end
-    end
+local hexgon
+local nvec=Vec(1,-1)
+local position=Vec()
+local screen_center
+local function axis(end_vec)
+    local cx,cy=screen_center:unpack()
+    local dx,dy=end_vec:unpack()
+    love.graphics.line(cx,cy,dx,dy)
 end
-function love.draw_()
-    -- love.graphics.print("hi love",400,300)
-    love.graphics.setColor(1,1,1)
-    sheep:draw()
-    local dt=1/12*3
-    local frame_id = math.floor(T/dt)%#player.frames+1
-    player:draw(frame_id)
+local function log(...)
+   love.graphics.print(...) 
+end
+function love.draw()
+    local font=love.graphics.newFont(30)
+    love.graphics.setFont(font)
+    love.graphics.setColor(.3,.4,.4)
+
+    hexgon:draw()
+
+    love.graphics.setColor(1,1,0)
+    local q,r=hexgon:qr()
+    local end_vec =screen_center+r:normal()*200
+    axis(end_vec)
+    love.graphics.setColor(0,1,0)
+    log("R",end_vec.x,end_vec.y)
+    end_vec =screen_center+q:normal()*200
+    axis(end_vec)
+    love.graphics.setColor(.0,0.3,.9)
+    log("Q",end_vec.x,end_vec.y)
+    -- love.graphics.print(T, 10, 10)
+
+    love.graphics.setColor(1,.5,.5)
+    -- mouse end
+    axis(position)
+    love.graphics.setColor(.5,.5,.5)
+    love.graphics.setColor(0,1,1)
+
+    local q_value,r_value = hexgon:vec2cube(position-screen_center)
+    log('q:'..q_value,10,40)
+    log('r:'..r_value,10,80)
+    local step=hexgon.size*math.sqrt(3)
+    -- step=1
+    -- print(step)
+    axis(q*q_value*step+screen_center)
+    axis(r*r_value*step+screen_center)
+
+    love.graphics.setColor(1,215/255,0)
+    hexgon:hex_draw(q_value,r_value)
 end
 function love.update(dt)
     T=T+dt
-    local mx,my=love.mouse.getPosition()
-    local direction = Vec(mx,my)-sheep.center
-    local speed = 7
-    local attract_force = direction:normal() * dt * speed
-    velocity = velocity + attract_force
-    local rotation=-math.pi/2+velocity:theta()
-    sheep.rotation=rotation
     -- sheep:move(velocity)
 end
 
@@ -58,13 +69,16 @@ function love.load()
     -- Sound = love.audio.newSource('beat.wav','static')
 
     config.w,config.h,_=love.window.getMode()
-    local img_center=Vec(config.w/2,config.h/2)
-    sheep=Sprite(img_center,'sheep.png')
-    player=Sprite(Vec(300,100),'jump.png',{quad={117,233,5}})
+    screen_center=Vec(config.w/2,config.h/2)
 
+    hexgon = Hex.HexGrid(screen_center,40)
+end
+function love.mousereleased(x,y)
+    hexgon:touch(x,y)
 end
 function love.mousemoved(x,y)
-    -- Shapes.hex.center:set(x,y)
+    position:set(x,y)
+    -- hexgon.center:set(x,y)
 end
 function love.keypressed(key,scancode,isrepeat)
     if key =='escape'then

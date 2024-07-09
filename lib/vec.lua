@@ -7,8 +7,10 @@ end
 function Vec:new(x,y)
     self.x=x or 0
     self.y=y or 0
+    self.type="Vec"
 end
 function  Vec:project(vec)
+    -- return the len of projected vec
     return self:dot(vec:normal())
     
 end
@@ -16,7 +18,12 @@ function Vec:dot(vec)
     return self.x*vec.x + self.y*vec.y
 end
 function Vec:__add( new_vec)
-    local x, y = self.x + new_vec.x, self.y + new_vec.y
+    local x,y=0,0
+    if type(new_vec) == 'number' then
+        x, y = self.x + new_vec, self.y + new_vec
+    else
+        x, y = self.x + new_vec.x, self.y + new_vec.y
+    end
     return Vec(x,y)
 end
 function Vec:__sub(new_vec)
@@ -55,6 +62,41 @@ function Vec:__div(div)
             return Vec(x/dx,y/dy)
         end
     end
+end
+function Vec:sign()
+    local _sign=function (x)
+        if x > 0 then
+            x = 1
+        elseif x < 0 then
+            x = -1
+        else
+            x = 0
+            end
+        return x
+    end
+    return self:map(_sign)
+end
+function Vec:map(func)
+    local x, y=self:unpack()
+    return Vec(func(x),func(y))
+end
+function Vec:down2zero(vec)
+    if type(vec) =="number" then
+        vec=Vec(vec,vec)
+    end
+    --[[
+    -1--->---0---<---1
+    --]]
+    local relu=function (x)
+        if x<0 then
+            x=0
+        end
+        return x
+    end
+    local sign=self:sign()
+    local remain=self:abs()-vec:abs()
+    local result=remain:map(relu)*sign
+    return result
 end
 function Vec:__tostring()
     return string.format("Vec(%s, %s)",self.x,self.y)
