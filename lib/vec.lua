@@ -1,5 +1,5 @@
-local Object=require('classic')
-local Vec = Object:extend()
+local proto=require('prototype')
+local Vec = proto{name='Vec'}
 local function degree2radian(degree)
     return degree/180*math.pi
 end
@@ -7,7 +7,6 @@ end
 function Vec:new(x,y)
     self.x=x or 0
     self.y=y or 0
-    self.type="Vec"
 end
 function  Vec:project(vec)
     -- return the len of projected vec

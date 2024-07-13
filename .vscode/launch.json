@@ -18,7 +18,9 @@
             "type": "lua-local",
             "request": "launch",
             "program": {
-                "command": "C:\\Program Files\\Love\\love.exe"
+                //"command": "C:\\Program Files\\Love\\love.exe"
+                "command": "love"
+
             },
             "args": ["."]
         }

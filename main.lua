@@ -1,80 +1,52 @@
 -- require('lldebugger').start()
-package.path=package.path.. './lib/?.lua'
+local function addpath(folder)
+    package.path = package.path .. ';./'..folder..'/?.lua'
+end
+addpath('lib')
 print(_VERSION)
+local __verson=require('version')
 local Vec= require("vec")
 local Shape = require("shape")
-local Hex=require("hexgon")
+local Hex = require("hexgon")
+local Container=require('container')
+local Pen = require('pen')
 local Sprite=require('sprite')
-local Trans=require('transform')
-local config={}
+local Array=require('array')
+local config = {}
 local T=1
-local hexgon
-local nvec=Vec(1,-1)
 local position=Vec()
-local screen_center
-local function axis(end_vec)
-    local cx,cy=screen_center:unpack()
-    local dx,dy=end_vec:unpack()
-    love.graphics.line(cx,cy,dx,dy)
-end
-local function log(...)
-   love.graphics.print(...) 
-end
+local pen = Pen()
 function love.draw()
-    local font=love.graphics.newFont(30)
-    love.graphics.setFont(font)
-    love.graphics.setColor(.3,.4,.4)
-
-    hexgon:draw()
-
-    love.graphics.setColor(1,1,0)
-    local q,r=hexgon:qr()
-    local end_vec =screen_center+r:normal()*200
-    axis(end_vec)
-    love.graphics.setColor(0,1,0)
-    log("R",end_vec.x,end_vec.y)
-    end_vec =screen_center+q:normal()*200
-    axis(end_vec)
-    love.graphics.setColor(.0,0.3,.9)
-    log("Q",end_vec.x,end_vec.y)
-    -- love.graphics.print(T, 10, 10)
-
-    love.graphics.setColor(1,.5,.5)
-    -- mouse end
-    axis(position)
-    love.graphics.setColor(.5,.5,.5)
-    love.graphics.setColor(0,1,1)
-
-    local q_value,r_value = hexgon:vec2cube(position-screen_center)
-    log('q:'..q_value,10,40)
-    log('r:'..r_value,10,80)
-    local step=hexgon.size*math.sqrt(3)
-    -- step=1
-    -- print(step)
-    axis(q*q_value*step+screen_center)
-    axis(r*r_value*step+screen_center)
-
-    love.graphics.setColor(1,215/255,0)
-    hexgon:hex_draw(q_value,r_value)
+    pen:draw()
 end
 function love.update(dt)
     T=T+dt
-    -- sheep:move(velocity)
+    local hex_grid=pen.child['hex_grid']
+    local q,r=hex_grid:vec2cube(position-pen.center)
+    local player=pen.child['player']
+    player.center:set(hex_grid:cube2vec(q,r))
+    local hx=Hex.Hexgon(player.center,hex_grid.size,30)
+    hx.color=Shape.Color(.5,.5,.99)
+    pen:push(hx)
+    -- print(q,r)
+    -- player.center:set(+hex.center)
+    -- print(hex.center)
 end
 
 function love.load()
-    love.graphics.setBackgroundColor(.1,.1,.1)
-    love.graphics.setLineWidth(4)
-
-    -- Sound = love.audio.newSource('beat.wav','static')
-
-    config.w,config.h,_=love.window.getMode()
-    screen_center=Vec(config.w/2,config.h/2)
-
-    hexgon = Hex.HexGrid(screen_center,40)
+    -- pen.size=Vec(200,200)
+    -- pen:push(Shape.Line(pen.center,Vec(100,100)))
+    local arr=Array{1,2,3}
+    print(arr)
+    local cards=Container()
+    local hex = Hex.HexGrid(pen.center,40)
+    hex.color=Shape.Color(1,.5,.5)
+    pen:push(hex,'hex_grid')
+    local player=Sprite(hex:cube2vec(1,1))
+    pen:push(player,'player')
+    print(pen)
 end
 function love.mousereleased(x,y)
-    hexgon:touch(x,y)
 end
 function love.mousemoved(x,y)
     position:set(x,y)

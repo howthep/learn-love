@@ -15,7 +15,6 @@ Object.__index = Object
 function Object:new()
 end
 
-
 function Object:extend()
   local cls = {}
   for k, v in pairs(self) do
@@ -60,6 +59,7 @@ end
 
 function Object:__call(...)
   local obj = setmetatable({}, self)
+---@diagnostic disable-next-line: redundant-parameter
   obj:new(...)
   return obj
 end

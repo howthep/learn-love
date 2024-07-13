@@ -1,6 +1,6 @@
 local Vec=require('vec')
-local Object=require('classic')
-local Transform  = Object:extend()
+local proto=require('prototype')
+local Transform  = proto{name='Transform'}
 
 function Transform:new(a,b,c,d)
     if a==nil then

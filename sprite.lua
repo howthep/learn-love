@@ -1,10 +1,10 @@
-local Object=require('classic')
 local Vec = require('vec')
-local Sprite =Object:extend()
+local Shape = require('shape').Shape
+local Sprite =Shape{name='Sprite'}
 
 function Sprite:new(center,img_path,ops)
+    Sprite.super(self,{vec=center})
     self.img_path=img_path
-    self.center=center or Vec()
     img_path=img_path or 'sheep.png'
     self.img=love.graphics.newImage(img_path)
     self.w,self.h=self.img:getWidth(),self.img:getHeight()

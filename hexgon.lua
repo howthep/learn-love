@@ -1,11 +1,11 @@
-local Object=require('classic')
+local Shape=require('shape').Shape
 local Vec=require('vec')
 local Transform=require('transform')
-local Hexgon=Object:extend()
+local Hexgon=Shape{name='Hexgon'}
 
 function Hexgon:new(vec,r,base_angle)
-    self.center=vec
-    self.r=r
+    Hexgon.super(self,vec)
+    self.r=r or 10
     self.base_angle=base_angle or 0
 end
 
@@ -26,11 +26,12 @@ end
 function Hexgon:move(dt)
 end
 
-local HexGrid=Object:extend()
+local HexGrid=Shape{name='HexGrid'}
 function HexGrid:new(vec,size)
-    self.center=vec
+    HexGrid.super(self,vec)
     self.size=size or 20.0 -- radius of outer circle 
     self.rotate=0
+    self.lw=2
 end
 function HexGrid:touch(x,y)
     print(x,y)
@@ -90,6 +91,7 @@ function HexGrid:cube2vec(q,r,s)
     local tr=self:tr()
     local step = self.size*math.sqrt(3)
     local ret=tr*Vec(q,r)*step+self.center
+    -- at screen space
     return ret
 end
 function HexGrid:hex_draw(q,r)

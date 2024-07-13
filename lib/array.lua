@@ -1,11 +1,13 @@
-local Object=require("classic")
-local Array=Object:extend()
+local proto=require('prototype')
+local Array=proto{name='Array'}
 local unp=require("version").unp
 
 function Array:new(...)
     -- input can be number,string,table... 
     local args={...}
-    self.type="array"
+    if #args == 1 then
+        args=args[1]
+    end
     for i,v in ipairs(args) do
         local typ=type(v)
         if typ=="table" then
