@@ -19,10 +19,11 @@
             "request": "launch",
             "program": {
                 //"command": "C:\\Program Files\\Love\\love.exe"
-                "command": "love"
+                // "command": "love"
+                "command": "./run.sh"
 
             },
-            "args": ["."]
+            "args": ["debug"]
         }
     ]
 }
