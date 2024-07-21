@@ -59,6 +59,8 @@ function Vec:__div(div)
         local dx,dy=div:unpack()
         if dx*dy ~=0 then
             return Vec(x/dx,y/dy)
+        else
+            error(div..' can not be divider')
         end
     end
 end
@@ -100,6 +102,9 @@ end
 function Vec:__tostring()
     return string.format("Vec(%s, %s)",self.x,self.y)
 end
+function Vec:__concat(strin)
+    return tostring(self)..strin
+end
 function Vec:unpack()
    return self.x,self.y
 end
@@ -129,6 +134,10 @@ end
 function Vec:len()
     local x,y=self:unpack()
     return math.sqrt(x^2+y^2)
+end
+function Vec:prep()
+    -- x1*x2+y1*y2=0
+    return Vec(self.y,-self.x):normal()
 end
 function Vec:normal()
     local len = self:len()

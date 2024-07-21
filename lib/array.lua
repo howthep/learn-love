@@ -10,11 +10,23 @@ function Array:new(...)
     end
     for i,v in ipairs(args) do
         local typ=type(v)
-        if typ=="table" then
+        if typ=="table" and v.name==nil then
             self:push(Array(unp(v)))
         else
             self:push(v)
         end
+    end
+end
+function Array:map(func)
+    local re=Array{}
+    for i,v in ipairs(self) do
+        re[i]=func(v,i,self)
+    end
+    return re
+end
+function Array:each(func)
+    for i,v in ipairs(self) do
+        func(v,i,self)
     end
 end
 function Array:__tostring()
@@ -47,8 +59,8 @@ function Array:push(x)
     table.insert(self,x)
 end
 function Array:pop()
-    return table.remove(self)
     -- pop at end
+    return table.remove(self)
 end
 function Array:shift(x)
     -- push at head
@@ -57,5 +69,15 @@ end
 function Array:unshift()
     -- pop at head
     return table.remove(self,1)
+end
+function Array:exist(func)
+    -- check if at least one item satisfies condition
+    for i,v in ipairs(self) do
+        local bool=func(v,i,self)
+        if bool==true then
+            return true
+        end
+    end
+    return false
 end
 return Array

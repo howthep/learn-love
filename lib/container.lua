@@ -1,13 +1,15 @@
 -- container auto layout its content
 local proto=require('prototype')
 local Node=require('node')
-local Container=Node{name='Container'}
-Container.w=100
-Container.h=100
+local Shape=require('shape')
+local Vec=require('vec')
+local Container=Node{name='Container',size=Vec(100,100)}
 function Container:new(vec,config)
     Container.super(self,vec)
-    self.w=0
     table.update(self,config or {})
-    -- print(self.w,self.h)
+end
+function Container:render()
+    -- local rect=Shape.Rect{center=self.center,size=self.size}
+    -- rect:render()
 end
 return Container
