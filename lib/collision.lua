@@ -5,12 +5,13 @@ local Line=require('shape').Line
 local Collid=proto{name="collid"}
 function Collid:new()
     self.drawables=Array{}
+    self.debug=false
 end
 function Collid:sat(c1,point)
     local collid=self
     c1.color=Color(.1,.3,.1)
     self.drawables:push(c1)
-    local normals=c1:normal()
+    local normals=c1:normals()
     local center=c1:center()
     normals:each(function (dir)
         local to=center+dir*100
@@ -23,29 +24,20 @@ function Collid:sat(c1,point)
             return vertex:project(normal)-center:project(normal)
         end)
         local pj=point:project(normal)-center:project(normal)
-        return not self:check_overlap(projects,{pj},normal,center)
+        return not self:check_overlap(projects,Array(pj),normal,center)
     end)
     if is_collid then
             c1.color=Color(.3,.6,.6)
     end
 end
 function Collid:check_overlap(pj1,pj2,normal,center)
-    local function get_max_min(t)
-        local min,max=t[1],t[1]
-        Array(t):each(function (v)
-            if v <min then
-                min=v
-            end
-            if v>max then
-                max=v
-            end
-        end)
-        return max,min
+    local max1,min1=pj1:max_min()
+    local max2,min2=pj2:max_min()
+    if max2==min2 then
+        max2=max2+5
     end
-    local max1,min1=get_max_min(pj1)
-    local max2,min2=get_max_min(pj2)
     self.drawables:push(Line(center+normal*max1,center+normal*min1,Color(.9,.2,.7)))
-    self.drawables:push(Line(center+normal*(max2+5),center+normal*min2,Color(.3,.9,.1)))
+    self.drawables:push(Line(center+normal*max2,center+normal*min2,Color(.3,.9,.1)))
     if (max1>min2 and min1<min2) or
         (max1 > max2 and min1 <max2) then
         return true
@@ -57,10 +49,12 @@ function Collid:remove_parallel_axis(axis)
     
 end
 function Collid:render()
-    print("drawables len: "..#self.drawables)
+    -- for debug
+    if self.debug then
     self.drawables:each(function (v,i)
         v:render()
     end)
+    end
     self.drawables=Array{}
 end
 local function test()

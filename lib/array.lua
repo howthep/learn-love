@@ -1,12 +1,18 @@
 local proto=require('prototype')
 local Array=proto{name='Array'}
 local unp=require("version").unp
-
+local FP=require('FP')
 function Array:new(...)
     -- input can be number,string,table... 
     local args={...}
     if #args == 1 then
         args=args[1]
+        if args.name=='Array' then
+            return args:clone()
+        end
+        if type(args)~='table' then
+            args={args}
+        end
     end
     for i,v in ipairs(args) do
         local typ=type(v)
@@ -17,12 +23,76 @@ function Array:new(...)
         end
     end
 end
+function Array:filter(func)
+    local filtered=Array{}
+    self:each(function (v,i,arr)
+        if func(v,i,arr) then
+            filtered:push(v)
+        end
+    end)
+    return filtered
+end
+function Array:unpack()
+   return unpack(self)
+end
+function Array:slice(start,end_,step)
+    local wrap = function(x)
+        local len = #self
+        if x < 0 then
+            -- -1 => len , -2 => len-1
+            x = len + 1 + x
+        end
+        return FP.clamp(x,1,len)
+    end
+
+    start = start or 1
+    end_ = end_ or #self
+    start,end_=Array{start,end_}:map(wrap):unpack()
+
+    if start==end_ then
+        return Array{self[start]}
+    end
+    local diff=end_-start
+    step = step or diff/math.abs(diff)
+
+    local i=start
+    local not_get_end = function(i,end_,step)
+        -- include end_
+        -- 1,10,1
+        -- 10,1,-1
+        return (end_ - i) * step >= 0
+    end
+
+    local arr=Array{}
+    while not_get_end(i,end_,step) and self[i] do
+        arr:push(self[i])
+        i=i+step
+    end
+    return arr
+end
+function Array:reduce(func,init_value)
+    local accumulator=init_value or 0
+    self:each(function (v,i)
+        accumulator = func(accumulator, v)
+    end)
+    return accumulator
+end
 function Array:map(func)
     local re=Array{}
     for i,v in ipairs(self) do
         re[i]=func(v,i,self)
     end
     return re
+end
+function Array:clone()
+    local unchange=function (x)
+        if type(x) =="table" and x.clone then
+            return x:clone()
+        else
+            return x
+        end
+    end
+    return self:map(unchange)
 end
 function Array:each(func)
     for i,v in ipairs(self) do
@@ -79,5 +149,20 @@ function Array:exist(func)
         end
     end
     return false
+end
+function Array:sorted(compare)
+    -- return sorted array
+    local arr=self:clone()
+    table.sort(arr,compare)
+    return arr
+end
+function Array:max_min()
+    local sorted = self:sorted()
+    local min, max = sorted[1], sorted[#sorted]
+    return max, min
+end
+function Array:join(seperator)
+    seperator=seperator or ', '
+    return table.concat(self,seperator)
 end
 return Array

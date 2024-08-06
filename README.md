@@ -1,13 +1,11 @@
 # learn-love
 ## TODO
-1.  unit coordinate [-1,1]
+1. UI, css grid, the only layout
 2.  practice some animation principle, stretch, anticipation
 3. Scene class
-4.  rewrite classic.lua, `__index` should be carefully done
 
 ## note
 - use `Array:push`, DO NOT use `Array.push`
-- line
 - `__index`: when the key not found in table, search the key in __index
 - to debug in vscode, use `tomblind.local-lua-debugger-vscode`
 - lua 5.1
@@ -16,3 +14,5 @@
 
 ## ref
 - [hexgrid](https://www.redblobgames.com/grids/hexagons/#pixel-to-hex)
+- [gjk](https://dyn4j.org/2010/04/gjk-gilbert-johnson-keerthi/)
+- [grid](https://ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)

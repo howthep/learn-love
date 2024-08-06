@@ -1,3 +1,4 @@
+
 table.merge=function (t,p)
     -- only add nonexist key
     for k,v in pairs(p) do
@@ -12,13 +13,45 @@ table.update=function (t,p)
         t[k] = v
     end
 end
+table.keys=function (t)
+    local keys={}
+    for key, value in pairs(t) do
+        table.insert(keys,key)
+    end
+    return keys
+end
 
+--- prototype for all classes
+---@class prototype
+---@field super function the class extended
 local prototype={}
 prototype.__index=prototype
 prototype.name='prototype'
 function prototype:new(t)
     -- print('prototype new')
-    table.merge(self,t or {})
+    self:merge(t or {})
+end
+--- only add nonexist key
+function prototype:merge(t)
+    for k,v in pairs(t) do
+        if not rawget(self,k) then
+            self[k]=v
+        end
+    end
+end
+function prototype:update(t,excluded_keys)
+    local temp={}
+    table.merge(temp,t)
+    excluded_keys=excluded_keys or {}
+    if type(excluded_keys)~='table' then
+        excluded_keys={excluded_keys}
+    end
+    for i,v in ipairs(excluded_keys) do
+        temp[v]=nil
+    end
+    for k,v in pairs(temp) do
+        self[k] = v
+    end
 end
 function prototype:__tostring()
     local ret=string.format('{%s}\n',self.name)
@@ -27,6 +60,9 @@ function prototype:__tostring()
     end
     return string.sub(ret,1,-2)
 end
+---check whether same prototype
+---@param T any
+---@return boolean
 function prototype:is(T)
     local mt =getmetatable(self)
     while mt do
@@ -39,11 +75,20 @@ function prototype:is(T)
 end
 prototype=setmetatable(prototype, {
     __call=function (t, ...)
+        -- t is called class
         local mt=getmetatable(t)
         local o =setmetatable({},t)
-        t.__call=mt.__call
+        -- extend from super class
+        if not rawget(t,'_extend') then
+            print('extend',t.name)
+            for func_name, func in pairs(mt) do
+                if func_name:find("__") == 1 then
+                    t[func_name] = t[func_name] or mt[func_name]
+                end
+            end
+            t._extend = true
+        end
         t.__index=t
-        t.__tostring=t.__tostring or mt.__tostring
         o.super=t.new
         t.new(o,...)
         return o

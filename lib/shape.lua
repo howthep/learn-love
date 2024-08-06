@@ -1,19 +1,22 @@
-local proto=require('prototype')
+local proto_vector=require('vector')
 local Node=require('node')
 local Vec = require('vec')
 local Array=require('array')
-local Color = proto{
-    name='Color',
-    r=1,
-    b=1,
-    g=1,
-    a=1,
+---@class Color:prototype
+local Color = proto_vector{
+    name = 'Color',
+    default = {
+        r = 1,
+        b = 1,
+        g = 1,
+        a = 1, }
 }
+Color.keys=Array{'r','g','b','a'}
 function Color:new(r,g,b,a)
-    self.r=r or 1
-    self.g=g or 1
-    self.b=b or 1
-    self.a=a or 1
+    self.r=r
+    self.g=g
+    self.b=b
+    self.a=a
 end
 function Color:table()
     return {self.r,self.g,self.b,self.a}
@@ -85,7 +88,7 @@ function Polygon:vec_table()
     end
     return vecs
 end
-function Polygon:normal()
+function Polygon:normals()
     -- for collid, normal of edge 
     -- return: Array of Vec
     local vecs=Array(self:vec_table())
@@ -103,9 +106,9 @@ end
 function Polygon:center()
     local vecs=Array(self:vec_table())
     local sum=Vec()
-    vecs:each(function (v)
-        sum=sum+v
-    end)
+    sum = vecs:reduce(function (accum,v)
+        return accum+v
+    end,sum)
     return sum/#vecs
 end
 local export={}
