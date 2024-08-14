@@ -123,21 +123,21 @@ function span:draw(config)
     local x,y=self.anchor:unpack()
     local w,h=self.size:unpack()
     if self.style.bg then
-        Pen.rect({
+        Pen.rect{
             x=x,y=y,w=w,h=h,
             mode='fill',color=self.style.bg
-        })
+        }
     end
-    Pen.text({
+    local xy=self.text_anchor or self.anchor
+    x,y=xy:unpack()
+    Pen.text{
         text=self.text,
         x=x,
         y=y,
         color=self.style.color,
         limit=self.style.width,
         align=self.style.align
-    })
-    -- love.graphics.setColor(self.style.color:table())
-    -- love.graphics.printf(self.text,x,y,self.style.width,'left')
+    }
 end
 function span:__tostring()
     return string.format('%s: %s',self.name,self.text)

@@ -52,7 +52,7 @@ function style:apply(element)
     if element:is_hover() then
         element.last_frame_hovered=true
     -- if true then
-        self:update(self.hover:table(),{'_backup'})
+        self:update(self.hover:table() )
         element:onhover()
     else
         if element.last_frame_hovered then
@@ -66,29 +66,39 @@ function style:div(element)
     local w,h=self:unit_convert({'width','height'})
     element.size=Vec(w,h)
     if self.display=='grid' then
-        local len=#element.children
-        local sum=0
-        for i=1,len do
-            sum=sum+(self.column[i] or 1)
-        end
-        local gap=self.gap
-        w=w-(len-1)*gap
-        local prev=nil
-        local frs=self.column
-        element.children:each(function (child,index)
-            local fr = frs[index] or 1
-            child.style.width=w* fr/sum
-            if prev then
-                local xoffset = prev.style.width + gap
-                child.anchor = prev.anchor + Vec(xoffset, 0)
-            else
-                --- the first one
-                child.anchor = element.anchor:clone()
-            end
-            prev=child
-        end)
+        self:gird_layout(element)
     end
 end
+function style:gird_layout(element)
+    local w,h=element.size:unpack()
+    local len = #element.children
+    local frs=self.column or self.row
+    local direction=self.column and Vec(1,0) or Vec(0,1)
+    local dir_key=self.column and 'width' or 'height'
+    local gap = self.gap
+    local total=self.column and w or h
+    total =total  - (len - 1) * gap
+
+    local fr_sum = 0
+    for i = 1, len do
+        fr_sum = fr_sum + (frs[i] or 1)
+    end
+
+    local prev = nil
+    element.children:each(function(child, index)
+        local fr = frs[index] or 1
+        child.style[dir_key] = total * fr / fr_sum
+        if prev then
+            local offset = prev.style[dir_key] + gap
+            child.anchor = prev.anchor + direction *offset
+        else
+            --- the first one
+            child.anchor = element.anchor:clone()
+        end
+        prev = child
+    end)
+end
+
 function style:span(element)
     local font = self:get_font()
     love.graphics.setFont(font)
@@ -96,8 +106,15 @@ function style:span(element)
     local wrap_width, wrap_text = font:getWrap(element.text, self.width)
     local line_h = font:getHeight()
     local w=math.max(wrap_width,rawget(self,'width') or 0)
-    element.size = Vec(w, line_h * #wrap_text)
+    local h=self.height or line_h * #wrap_text
+    local text_size=Vec(wrap_width,line_h*#wrap_text)
+    element.size = Vec(w, h)
     element.anchor = self:get_anchor(element)
+    if self.vlign=='center' then
+        element.text_anchor=element.anchor+Vec(0,(h-text_size.y)/2)
+    elseif self.vlign=='bottom' then
+        element.text_anchor=element.anchor+Vec(0,h-text_size.y)
+    end
 end
 ---@param element element
 ---@return Vec2
@@ -172,7 +189,7 @@ function style:unit_convert(keys)
     if type(x)=='string' then
         local vw,vh=get_vwh()
         local map={vw=vw,vh=vh}
-        local num,unit=string.match(x,'(%d+)(%a+)')
+        local num,unit=string.match(x,'([%d%.]+)(%a+)')
         x=map[unit]*num/100
     end
     table.insert(t,x)
