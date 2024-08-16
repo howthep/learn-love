@@ -1,8 +1,11 @@
+style: element class id > merge to a table 
+so element do not need style, just need class
+No, still need style, for animation, rotation 
 # learn-love
 ## TODO
-1. UI, css grid, the only layout
-2.  practice some animation principle, stretch, anticipation
-3. Scene class
+1. card show select play
+2. color: RGB and RGBA
+2. practice some animation principle, stretch, anticipation
 
 ## note
 - use `Array:push`, DO NOT use `Array.push`

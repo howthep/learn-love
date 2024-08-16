@@ -17,14 +17,20 @@ local Collision_World=require('collision')()
 local font_size=30
 local font=love.graphics.newFont('simhei.ttf',font_size)
 love.graphics.push()
+
+
+local css=require('css')
 function love.draw()
-    Scene.root:render(T)
+    -- Scene.root:render(T)
+    css.render()
 end
 function love.update(dt)
     T=T+dt
 end
 
 function love.load()
+    local w,h,_=love.window.getMode()
+    love.mouse.setPosition(w/2,h/2)
     -- pen.size=Vec(200,200)
     -- pen:push(Shape.Line(pen.center,Vec(100,100)))
 end

@@ -1,7 +1,9 @@
 local proto=require('prototype')
-local Array=proto{name='Array'}
 local unp=require("version").unp
 local FP=require('FP')
+---@class Array
+local Array=proto{name='Array'}
+
 function Array:new(...)
     -- input can be number,string,table... 
     local args={...}
@@ -70,6 +72,11 @@ function Array:slice(start,end_,step)
     end
     return arr
 end
+---reduce(func,init_value)
+---func(accumulator,value)
+---@param func function
+---@param init_value any
+---@return any
 function Array:reduce(func,init_value)
     local accumulator=init_value or 0
     self:each(function (v,i)
@@ -94,9 +101,11 @@ function Array:clone()
     end
     return self:map(unchange)
 end
+---func(v, i, self)
+---@param func function
 function Array:each(func)
     for i,v in ipairs(self) do
-        func(v,i,self)
+        func(v, i, self)
     end
 end
 function Array:__tostring()

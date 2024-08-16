@@ -1,12 +1,21 @@
-
-table.merge=function (t,p)
+---return merged table
+---@param t table
+---@param p table
+---@return table
+table.merge=function (...)
+    local args={...}
     -- only add nonexist key
-    for k,v in pairs(p) do
-        if not rawget(t,k) then
-            t[k]=v
+    local new_table={}
+    for i, t in ipairs(args) do
+        for k, v in pairs(t) do
+            new_table[k] = v
         end
     end
+    return new_table
 end
+---update first table
+---@param t table
+---@param p table
 table.update=function (t,p)
     -- update all key, existing or nonexisting
     for k,v in pairs(p) do
@@ -40,8 +49,7 @@ function prototype:merge(t)
     end
 end
 function prototype:update(t,excluded_keys)
-    local temp={}
-    table.merge(temp,t)
+    local temp=table.merge({},t)
     excluded_keys=excluded_keys or {}
     if type(excluded_keys)~='table' then
         excluded_keys={excluded_keys}
