@@ -1,4 +1,4 @@
--- require('lldebugger').start()
+require('lldebugger').start()
 print(_VERSION)
 local Vec= require("vec")
 local Shape = require("shape")
@@ -19,10 +19,20 @@ local font=love.graphics.newFont('simhei.ttf',font_size)
 love.graphics.push()
 
 
-local css=require('css')
+local css = require('css'){
+    rosef = {
+    compose={'span','blue'},
+    size=100,
+}}
 function love.draw()
     -- Scene.root:render(T)
-    css.render()
+
+    local elem={
+        class={'rosef'},
+        text='haha',
+        id='cs'
+    }
+    css:render(elem)
 end
 function love.update(dt)
     T=T+dt
