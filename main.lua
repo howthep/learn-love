@@ -1,4 +1,4 @@
-require('lldebugger').start()
+-- require('lldebugger').start()
 print(_VERSION)
 local Vec= require("vec")
 local Shape = require("shape")
@@ -23,7 +23,8 @@ local css = require('css'){
     rosef = {
     compose={'span','blue'},
     size=100,
-}}
+    },
+}
 function love.draw()
     -- Scene.root:render(T)
 
