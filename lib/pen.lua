@@ -33,7 +33,7 @@ function Pen.round_rect(config)
     if border then
         local mode='line'
         local arc_type='open'
-        local segment=border_radius+10
+        local segment=border
         love.graphics.setColor(border_color:table())
         local lw=love.graphics.getLineWidth()
         love.graphics.setLineWidth(border)
