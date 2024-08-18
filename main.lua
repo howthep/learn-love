@@ -2,6 +2,7 @@
 print(_VERSION)
 local Vec= require("vec")
 local Shape = require("shape")
+local Color=Shape.Color
 local Hex = require("hexgon")
 local Container=require('container')
 local Pen = require('pen')
@@ -23,6 +24,10 @@ local css = require('css'){
     rosef = {
     compose={'span','blue'},
     size=100,
+    border_radius=20,
+    width=200,
+    height=200,
+    border=30,
     },
 }
 function love.draw()
@@ -31,7 +36,12 @@ function love.draw()
     local elem={
         class={'rosef'},
         text='haha',
-        id='cs'
+        id='cs',
+        style={
+            color=Color(.7,.5,.9),
+            bg=Color(.5,.3,.7),
+            border_color=Color(.3,.7,.8),
+        }
     }
     css:render(elem)
 end

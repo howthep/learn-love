@@ -31,7 +31,7 @@ end
 function css:render(element_root)
     local st=self.style_table
     local style=self:get_style(element_root.class)
-    pen.text(table.merge(st.dfs,style ,{
+    pen.draw_element(table.merge(st.dfs,style,element_root.style or {},{
         text = element_root.text,
         x = 100,
         y = 100,
