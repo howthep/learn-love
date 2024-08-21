@@ -14,7 +14,7 @@
             }
         },
         {
-            "name": "Debug Custom Lua Environment",
+            "name": "Love Environment",
             "type": "lua-local",
             "request": "launch",
             "program": {
@@ -23,7 +23,11 @@
                 "command": "./run.sh"
 
             },
-            "args": ["debug"]
+            "args": ["debug"],
+            "ignorePatterns": [
+                "prototype%.lua",
+                "array%.lua",
+            ]
         }
     ]
 }
