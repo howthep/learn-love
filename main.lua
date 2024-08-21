@@ -4,17 +4,13 @@ local Vec= require("vec")
 local Shape = require("shape")
 local Color=Shape.Color
 local Hex = require("hexgon")
-local Container=require('container')
-local Pen = require('pen')
-local Sprite=require('sprite')
 local Array=require('array')
 local FP=require('FP')
-local Scene=require('scene')
+local scene=require('scene')
+-- local Scene=require('scene')
 local config = {}
 local T=0
 local position=Vec()
--- local pen = Pen()
-local Collision_World=require('collision')()
 local font_size=30
 local font=love.graphics.newFont('simhei.ttf',font_size)
 love.graphics.push()
@@ -22,28 +18,18 @@ love.graphics.push()
 
 local css = require('css'){
     rosef = {
-    compose={'span','blue'},
-    size=100,
-    border_radius=20,
-    width=200,
-    height=200,
-    border=30,
+    compose={'blue'},
+    size=30,
+    -- border_radius=20,
+    -- width=200,
+    -- height=200,
+    border_width=10,
     },
 }
 function love.draw()
     -- Scene.root:render(T)
 
-    local elem={
-        class={'rosef'},
-        text='haha',
-        id='cs',
-        style={
-            color=Color(.7,.5,.9),
-            bg=Color(.5,.3,.7),
-            border_color=Color(.3,.7,.8),
-        }
-    }
-    css:render(elem)
+    css:render(scene)
 end
 function love.update(dt)
     T=T+dt

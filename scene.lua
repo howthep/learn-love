@@ -1,59 +1,35 @@
-local style=require('style')
-local element=require('element')
+local ui=require('element')
 local Color=require('shape').Color
-local Scene={}
 
-Scene.drawable={}
-Scene.collidable={}
-local bottom_style=style{
-            position='absolute',
-            top=0,
-            left=0,
-            height='80vh',
-            bg=Color(.2,.4,.6),
-            width='100vw',
-            color=Color(1,1,1),
-            display='grid',
-            row={1,3,1},
-            gap=10,
+local Scene = {
+    class = 'rosef',
+    style = {
+        color = Color(.9, .8, .9),
+        bg = Color(.1, .1, .1),
+        border_color = Color(.3, .7, .8),
+        align = 'center'
+    },
+    children = { ui.span {
+        text = 'child',
+        style = {
+            bg = Color(0, 0.5, 1),
+        },
+    }, ui.span {
+        text = 'child_2_lal',
+        class = 'blue',
+        style = {
+            width=120,
+            size = 40,
+            bg = Color(1, 0, .5)
         }
-local text_style=style{
-    bg = Color(.5, .8, 1),
-    color=Color(0,0,0),
-    align='center',
-    vlign='center',
-    width=400,
-    hover=style{
-        bg=Color(.9,.5,.7)
+    }, ui.span {
+        text = 'child_3_lisad',
+        style = {
+            color = Color(0, 0, 0),
+            size = 20,
+            bg = Color(.5, 1, .5)
+        }
     }
-}
-local bottom_ui = element.div {
-        element.span {
-            text = 'draw',
-            style = text_style,
-        },
-        element.span{
-            text='cards',
-            style = text_style,
-        }:add_style{
-            bg=Color(.9,.2,.4),
-            -- vlign='bottom',
-        },
-        element.span {
-            text = 'discard',
-            style = text_style,
-        },
-        element.span {
-            text = 'discard',
-            style = text_style,
-        },
-        element.span {
-            text = 'discard',
-            style = text_style,
-        },
-    }:add_style(bottom_style)
-
-Scene.root=element.div{
-    bottom_ui
+    }
 }
 return Scene

@@ -11,6 +11,9 @@ function Pen.draw_element(config)
     else
         Pen.rect(config)
     end
+    if config.text then
+        Pen.text(config)
+    end
 end
 ---comment
 ---@param config table {border,border_radius,x,y,width,height}
@@ -19,6 +22,7 @@ function Pen.round_rect(config)
     local env={love=love,_G=_G,math=math}
     table.update(env,config)
     setfenv(1,env)
+    local border_radius=math.min(border_radius,height/2,width/2)
     love.graphics.setColor(color:table())
     --[[
             270
@@ -30,13 +34,13 @@ function Pen.round_rect(config)
             v 
             90
     --]]
-    if border then
+    if border_width then
         local mode='line'
         local arc_type='open'
         local segment=border
         love.graphics.setColor(border_color:table())
         local lw=love.graphics.getLineWidth()
-        love.graphics.setLineWidth(border)
+        love.graphics.setLineWidth(border_width)
         local tx,ty=x+border_radius,y+border_radius
         love.graphics.arc(mode,arc_type,tx,ty,border_radius,2*deg90,3*deg90,segment)
         love.graphics.line(x+border_radius,y,x+width-border_radius,y)
@@ -74,17 +78,28 @@ function Pen.rect(config)
     local env={love=love,_G=_G}
     table.update(env,config)
     setfenv(1,env)
-    love.graphics.setColor(color:table())
-    love.graphics.rectangle(mode or 'fill',x,y,width,height)
+    if border_width then
+        local lw=love.graphics.getLineWidth()
+        love.graphics.setLineWidth(border_width)
+        love.graphics.setColor(border_color:table())
+        love.graphics.rectangle('line',x,y,width,height)
+        love.graphics.setLineWidth(lw)
+    end
+    if bg then
+        love.graphics.setColor(bg:table())
+        love.graphics.rectangle('fill',x,y,width,height)
+    end
     _G.setfenv(1,_G)
 end
 ---comment
----@param config table {text,x,y,limit,align,color,size}
+---@param config table {text,x,y,width,align,color,size}
 function Pen.text(config)
     local env={love=love,_G=_G}
     table.update(env,config)
     setfenv(1,env)
-    love.graphics.setFont(Pen.get_font(size))
+    local font=Pen.get_font(size)
+    local limit=width or font:getWidth(text)
+    love.graphics.setFont(font)
     love.graphics.setColor(color:table())
     love.graphics.printf(text,x,y,limit,align)
     _G.setfenv(1,_G)
