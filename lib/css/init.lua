@@ -1,12 +1,16 @@
+local path=(...)
+print(path)
 local Array=require('array')
 local Vec=require('vec')
 local Shape=require('shape')
+local FP=require('FP')
 local Color=Shape.Color
 local prototype=require('prototype')
 local pen=require('pen')
 ---@class css
 ---@field style_table table
 local css=prototype{name='css'}
+table.update(css,require('css.grid'))
 local style_table_default = {
     default = {
         align = 'left',
@@ -30,7 +34,7 @@ local style_table_default = {
 }
 
 ---init by style_table
----@param t table
+---@param t table class table
 function css:new(t)
     self.style_table=table.merge(style_table_default,t)
 end
@@ -40,7 +44,6 @@ function css:render(element_root)
     self:draw(element_root)
 end
 function css:draw(element_root)
-    local st=self.style_table
     local style=self:get_style(element_root)
     pen.draw_element(table.merge(
         style, element_root.content,
@@ -56,7 +59,7 @@ end
 function css:get_height(element,parent)
     local style=self:get_style(element)
     if style.height then
-        return style.height
+        return self:unit_convert('height',element,parent)
     end
     if element.children then
         local h=0
@@ -80,7 +83,7 @@ end
 function css:get_width(element,parent)
     local style=self:get_style(element)
     if style.width then
-        return style.width
+        return self:unit_convert('width',element,parent)
     end
     if element.children then
         local w=0
@@ -95,16 +98,36 @@ function css:get_width(element,parent)
     if style.display=='inline' and element.text then
         local font = pen.get_font(style.size)
         local width,_=font:getWidth(element.text)
+        if style.padding then
+            width=width+2*style.padding[2]
+        end
         return  width
     end
     return style.width or parent.content.width
 end
-function css:set_children_position(element_root,parent)
-    local st=self:get_style(element_root)
-    local dir=st.display=='block' and Vec(0,1) or Vec(1,0)
+function css:set_child_wh(element,parent)
+    element.content={x=0,y=0}
+    element.content.width=self:get_width(element,parent)
+    element.content.height=self:get_height(element,parent)
+end
+---set w,h,x,y
+---@param element_root any
+function css:set_children_position(element_root)
+    local parent_style=self:get_style(element_root)
+    if parent_style.display=='grid' then
+        self:grid_layout(element_root)
+        return
+    end
+
+    for i,child in ipairs(element_root.children or {}) do
+        self:set_child_wh(child,element_root)
+    end
     local previous
-    for i, child in ipairs(element_root.children) do
+    for i, child in ipairs(element_root.children or {}) do
+        local st=self:get_style(child)
+        local dir = st.display == 'inline' and Vec(1, 0) or Vec(0, 1)
         if not previous then
+            --- the first child follow the parent
             previous=element_root
             child.content.x = previous.content.x
             child.content.y = previous.content.y
@@ -123,22 +146,19 @@ end
 ---@param element_root any
 ---@param parent any
 function css:layout(element_root,parent)
-    -- local style=self:get_style(element_root)
-    local layout_table = {
-        x = 0,
-        y = 0,
-    }
-    element_root.content=layout_table
-    --- mainly for text element
-    layout_table.width=self:get_width(element_root,parent)
-    if element_root.children then
-        for i,child in ipairs(element_root.children or {}) do
-            self:layout(child,element_root)
-        end
-        self:set_children_position(element_root)
+    if not element_root.content then
+        element_root.content = {
+            x = 0, y = 0,
+            width=self:get_width(element_root),
+            height=self:get_height(element_root)
+        }
     end
-    layout_table.height = self:get_height(element_root,parent)
-    layout_table.width=self:get_width(element_root,parent)
+    if element_root.children then
+        self:set_children_position(element_root)
+        for i, c in ipairs(element_root.children)do
+            self:layout(c, element_root)
+        end
+    end
 end
 ---from a class_table to a style_table
 ---@param class_table table
@@ -169,15 +189,22 @@ local function get_vwh()
     local vw,vh,_=love.window.getMode()
     return vw,vh
 end
-function css:unit_convert(keys)
+--- 23 vw vh % deg turn
+---@param keys any
+---@param element any
+---@param parent any
+---@return unknown
+function css:unit_convert(keys,element,parent)
+    --TODO
     if type(keys)~='table' then
         keys={keys}
     end
+    local st=self:get_style(element)
     local t={}
+    local vw, vh = get_vwh()
     for i,key in ipairs(keys) do
-        local x = self[key]
+        local x = st[key]
         if type(x) == 'string' then
-            local vw, vh = get_vwh()
             local map = { vw = vw, vh = vh }
             local num, unit = string.match(x, '([%d%.]+)(%a+)')
             x = map[unit] * num / 100
