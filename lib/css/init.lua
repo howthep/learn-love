@@ -1,5 +1,3 @@
-local path=(...)
-print(path)
 local Array=require('array')
 local Vec=require('vec')
 local Shape=require('shape')
@@ -9,8 +7,11 @@ local prototype=require('prototype')
 local pen=require('pen')
 ---@class css
 ---@field style_table table
+---@field grid_layout function
 local css=prototype{name='css'}
+
 table.update(css,require('css.grid'))
+
 local style_table_default = {
     default = {
         align = 'left',

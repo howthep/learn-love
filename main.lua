@@ -16,20 +16,11 @@ local font=love.graphics.newFont('simhei.ttf',font_size)
 love.graphics.push()
 
 
-local css = require('css'){
-    rosef = {
-    compose={'blue'},
-    size=30,
-    -- border_radius=20,
-    -- width=200,
-    -- height=200,
-    border_width=10,
-    },
-}
+local css = require('css')(scene.class)
 function love.draw()
     -- Scene.root:render(T)
 
-    css:render(scene)
+    css:render(scene.ui)
 end
 function love.update(dt)
     T=T+dt

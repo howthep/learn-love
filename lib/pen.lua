@@ -99,6 +99,10 @@ function Pen.text(config)
     setfenv(1,env)
     local font=Pen.get_font(size)
     local limit=width or font:getWidth(text)
+    if padding then
+        x=x+padding[2]
+        y=y+padding[1]
+    end
     love.graphics.setFont(font)
     love.graphics.setColor(color:table())
     love.graphics.printf(text,x,y,limit,align)
