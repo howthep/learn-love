@@ -46,16 +46,27 @@ function css:render(element_root)
 end
 function css:draw(element_root)
     local style=self:get_style(element_root)
-    pen.draw_element(table.merge(
-        style, element_root.content,
-        { text = element_root.text })
-    )
-   
+    love.graphics.push()
+    love.graphics.rotate(style.rotate or 0)
+    if style.post_draw~=true then
+        pen.draw_element(table.merge(
+            style, element_root.content,
+            { text = element_root.text })
+        )
+    end
     if element_root.children then
         for i,child in ipairs(element_root.children or {}) do
             self:draw(child)
         end
     end
+
+    if style.post_draw == true then
+        pen.draw_element(table.merge(
+            style, element_root.content,
+            { text = element_root.text })
+        )
+    end
+    love.graphics.pop()
 end
 function css:get_height(element,parent)
     local style=self:get_style(element)

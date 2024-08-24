@@ -1,6 +1,9 @@
 local ui=require('element')
 local Color=require('shape').Color
 local Class={
+    text_center={
+        align='center'
+    },
     viewport={
         width='100vw',
         height='100vh',
@@ -57,6 +60,39 @@ local battle={
         },
     }
 }
+local function card(text,style)
+    local r=math.random()
+    local g=math.random()
+    local b=math.random()
+    local c={
+        style=table.merge({
+            display='grid',
+            row={1,1},
+            border_width=5,
+            border_radius=10,
+            border_color=Color(.8,.8,.9),
+            post_draw=true,
+            -- bg=Color(.6,.2,.2)
+        },style),
+        children={
+            {
+                 text = '###',
+                 class='text_center',
+                 style={
+                    bg=Color(r,g,b)
+                 }
+            },
+            {
+                text = text,
+                class='text_center',
+                style={
+                    bg=Color(.3,.3,.3)
+                }
+            }
+        }
+    }
+    return c
+end
 local bottom_cards= {
     class = 'rosef',
     style = {
@@ -73,12 +109,17 @@ local bottom_cards= {
             bg = Color(0, 0.5, 1),
             padding = { 0, 10 },
         },
-    }, ui.span {
-        text = 'child_2_lal',
-        class = {'blue','p_20'},
+    }, {
         style = {
             size = 40,
             bg = Color(1, 0, .5),
+            display='grid',
+            column={1,1,1}
+        },
+        children={
+            card('strike',{rotate=.1}),
+            card('draw'),
+            card('defend'),
         }
     }, ui.span {
         text = 'child_3_lisad',

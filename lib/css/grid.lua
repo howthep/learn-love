@@ -28,7 +28,7 @@ function grid.grid_1d(self,element)
     local sum=Array(frs):reduce(FP.add)
     local parent_size=element.content[size_key]
     local previous
-    for i,fr in ipairs(frs) do
+    for i,child in ipairs(element.children) do
         local x,y=0,0
         if not previous then
             x,y=element.content.x,element.content.y
@@ -37,18 +37,18 @@ function grid.grid_1d(self,element)
             local anchor=Vec(prevc.x,prevc.y)+dir*Vec(prevc.width,prevc.height)
             x,y=anchor:unpack()
         end
+        local fr=frs[i] or 1
         local child_size=fr/sum*parent_size
-        local current_child=element.children[i]
-        current_child.content={
+        child.content={
             x=x,y=y
         }
-        current_child.content[size_key]=child_size
-        current_child.content[another_key]=element.content[another_key]
+        child.content[size_key]=child_size
+        child.content[another_key]=element.content[another_key]
 
         previous=element.children[i]
     end
 end
----comment
+---like this: column=5,row=-1
 ---@param self css
 ---@param element any
 function grid.grid_2d(self,element)

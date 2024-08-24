@@ -34,6 +34,21 @@ function Pen.round_rect(config)
             v 
             90
     --]]
+    if bg then
+        local mode='fill'
+        local arc_type='pie'
+        love.graphics.setColor(bg:table())
+        local tx,ty=x+border_radius,y+border_radius
+        love.graphics.arc(mode,arc_type,tx,ty,border_radius,2*deg90,3*deg90)
+        tx=x+width-border_radius
+        love.graphics.arc(mode,arc_type,tx,ty,border_radius,3*deg90,4*deg90)
+        tx,ty=x+width-border_radius,y+height-border_radius
+        love.graphics.arc(mode,arc_type,tx,ty,border_radius,0*deg90,1*deg90)
+        tx=x+border_radius
+        love.graphics.arc(mode,arc_type,tx,ty,border_radius,1*deg90,2*deg90)
+        love.graphics.rectangle(mode,x+border_radius,y,width-2*border_radius,height)
+        love.graphics.rectangle(mode,x,y+border_radius,width,height-2*border_radius)
+    end
     if border_width then
         local mode='line'
         local arc_type='open'
@@ -54,21 +69,6 @@ function Pen.round_rect(config)
         love.graphics.arc(mode,arc_type,tx,ty,border_radius,1*deg90,2*deg90,segment)
         love.graphics.line(x,y+height-border_radius,x,y+border_radius)
         love.graphics.setLineWidth(lw)
-    end
-    if bg then
-        local mode='fill'
-        local arc_type='pie'
-        love.graphics.setColor(bg:table())
-        local tx,ty=x+border_radius,y+border_radius
-        love.graphics.arc(mode,arc_type,tx,ty,border_radius,2*deg90,3*deg90)
-        tx=x+width-border_radius
-        love.graphics.arc(mode,arc_type,tx,ty,border_radius,3*deg90,4*deg90)
-        tx,ty=x+width-border_radius,y+height-border_radius
-        love.graphics.arc(mode,arc_type,tx,ty,border_radius,0*deg90,1*deg90)
-        tx=x+border_radius
-        love.graphics.arc(mode,arc_type,tx,ty,border_radius,1*deg90,2*deg90)
-        love.graphics.rectangle(mode,x+border_radius,y,width-2*border_radius,height)
-        love.graphics.rectangle(mode,x,y+border_radius,width,height-2*border_radius)
     end
     _G.setfenv(1,_G)
 end
@@ -94,7 +94,7 @@ end
 ---comment
 ---@param config table {text,x,y,width,align,color,size}
 function Pen.text(config)
-    local env={love=love,_G=_G}
+    local env = { love = love, _G = _G}
     table.update(env,config)
     setfenv(1,env)
     local font=Pen.get_font(size)
@@ -105,7 +105,8 @@ function Pen.text(config)
     end
     love.graphics.setFont(font)
     love.graphics.setColor(color:table())
-    love.graphics.printf(text,x,y,limit,align)
+    ---text,x,y,limit,align, rotate,scale_x,scale_y,offset_x,offset_y, shearing
+    love.graphics.printf(text,x,y,limit,align,0,1,1,0,0)
     _G.setfenv(1,_G)
 end
 function Pen.get_font(size)
