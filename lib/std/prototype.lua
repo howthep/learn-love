@@ -1,6 +1,4 @@
 ---return merged table
----@param t table
----@param p table
 ---@return table
 table.merge=function (...)
     local args={...}

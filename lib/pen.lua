@@ -78,6 +78,7 @@ function Pen.rect(config)
     local env={love=love,_G=_G}
     table.update(env,config)
     setfenv(1,env)
+    local x,y=offset:unpack()
     if border_width then
         local lw=love.graphics.getLineWidth()
         love.graphics.setLineWidth(border_width)
@@ -99,6 +100,7 @@ function Pen.text(config)
     setfenv(1,env)
     local font=Pen.get_font(size)
     local limit=width or font:getWidth(text)
+    local x,y=offset:unpack()
     if padding then
         x=x+padding[2]
         y=y+padding[1]

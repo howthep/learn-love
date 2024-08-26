@@ -55,7 +55,7 @@ local battle={
     },
     children={
         ui.span{
-            text='Main',
+            text='TODO: translate origin',
             class='p_20'
         },
     }
@@ -69,7 +69,7 @@ local function card(text,style)
             display='grid',
             row={1,1},
             border_width=5,
-            border_radius=10,
+            -- border_radius=10,
             border_color=Color(.8,.8,.9),
             post_draw=true,
             -- bg=Color(.6,.2,.2)
@@ -117,9 +117,16 @@ local bottom_cards= {
             column={1,1,1}
         },
         children={
-            card('strike',{rotate=.1}),
-            card('draw'),
-            card('defend'),
+            card('strike',{
+                rotate = .1,
+                origin = { 0, 50 },
+            }),
+            card('draw',{
+                origin = { 50, 50 },
+            }),
+            card('defend',{
+                origin = { 100, 0 },
+            }),
         }
     }, ui.span {
         text = 'child_3_lisad',

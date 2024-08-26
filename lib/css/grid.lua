@@ -1,4 +1,5 @@
 local Array=require('array')
+local rectsize=require('data.rectsize')
 local Vec=require('vec')
 local grid={}
 ---comment
@@ -24,7 +25,6 @@ function grid.grid_1d(self,element)
     local dir=is_row and Vec(0,1) or Vec(1,0)
     local size_key=is_row and 'height' or 'width'
     local another_key=is_row and 'width' or 'height'
-    local children=element.children
     local sum=Array(frs):reduce(FP.add)
     local parent_size=element.content[size_key]
     local previous
@@ -39,12 +39,9 @@ function grid.grid_1d(self,element)
         end
         local fr=frs[i] or 1
         local child_size=fr/sum*parent_size
-        child.content={
-            x=x,y=y
-        }
+        child.content=rectsize( x,y )
         child.content[size_key]=child_size
         child.content[another_key]=element.content[another_key]
-
         previous=element.children[i]
     end
 end
