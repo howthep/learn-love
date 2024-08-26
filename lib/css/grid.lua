@@ -1,6 +1,7 @@
 local Array=require('array')
 local rectsize=require('data.rectsize')
 local Vec=require('vec')
+---@class css
 local grid={}
 ---comment
 ---@param self css
