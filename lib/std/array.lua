@@ -2,6 +2,7 @@ local proto=require('prototype')
 local unp=require("version").unp
 local FP=require('FP')
 ---@class Array
+---@operator call:Array
 local Array=proto{name='Array'}
 
 function Array:new(...)
@@ -159,6 +160,11 @@ function Array:exist(func)
     end
     return false
 end
+---return ascend order,
+--- 
+---if compare return true, so first arg remain first
+---@param compare function|nil
+---@return Array
 function Array:sorted(compare)
     -- return sorted array
     local arr=self:clone()

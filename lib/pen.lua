@@ -1,3 +1,4 @@
+---@diagnostic disable: param-type-mismatch, undefined-global
 -- draw everything
 -- normal coordinate [-1,1]
 -- manage drawing, coloring, font
@@ -6,6 +7,9 @@ local Vec=require('vec')
 local Pen={}
 local fonts={}
 function Pen.draw_element(config)
+    if not config then
+        return
+    end
     if config.border_radius then
         Pen.round_rect(config)
     else

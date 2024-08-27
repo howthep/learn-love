@@ -12,8 +12,8 @@ function rectsize:center()
     return self:get(50,50)
 end
 ---get corrdinate by (x,y)+(w,h)*(u,v)/100
----@param x number
----@param y number
+---@param u number
+---@param v number
 ---@return  number
 ---@return  number
 function rectsize:get(u,v)

@@ -1,5 +1,6 @@
 local ui=require('element')
 local Color=require('shape').Color
+local TODO='z-index'
 local Class={
     text_center={
         align='center'
@@ -55,7 +56,7 @@ local battle={
     },
     children={
         ui.span{
-            text='TODO: translate origin',
+            text='TODO: '..TODO,
             class='p_20'
         },
     }
@@ -111,6 +112,7 @@ local bottom_cards= {
         },
     }, {
         style = {
+            z_index=10,
             size = 40,
             bg = Color(1, 0, .5),
             display='grid',
@@ -118,6 +120,7 @@ local bottom_cards= {
         },
         children={
             card('strike',{
+                z_index=10,
                 rotate = .1,
                 origin = { 0, 50 },
             }),
@@ -125,6 +128,7 @@ local bottom_cards= {
                 origin = { 50, 50 },
             }),
             card('defend',{
+                z_index=5,
                 origin = { 100, 0 },
             }),
         }

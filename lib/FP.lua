@@ -1,4 +1,4 @@
-FP={}
+local FP={}
 function FP.add(x,y)
     return x+y
 end

@@ -1,7 +1,6 @@
 local Array=require('array')
 local Vec=require('vec')
 local Shape=require('shape')
-local FP=require('FP')
 local Color=Shape.Color
 local prototype=require('prototype')
 local pen=require('pen')
@@ -9,9 +8,10 @@ local rectsize=require('data.rectsize')
 ---@class css
 local css=prototype{name='css'}
 
-local libs={'grid','layout','style'}
+local _path=(...)
+local libs={'grid','layout','style','draw'}
 for i,lib in ipairs(libs) do
-    table.update(css, require('css.'..lib))
+    table.update(css, require(_path..'.'..lib))
 end
 
 local style_table_default = {
@@ -52,21 +52,17 @@ function css:draw(element_root,parent)
     local offset=self:set_transform(element_root,parent)
 
     local add_info={ text = element_root.text, offset=offset}
-    if style.post_draw~=true then
-        pen.draw_element(table.merge(
-            style, element_root.content, add_info))
+    local element_info = table.merge( style, element_root.content, add_info)
+
+    self:sorted_child(element_root)
+    pen.draw_element(style.post_draw and nil or element_info)
+
+    for i,child in ipairs(self:sorted_child(element_root)) do
+        self:draw(child,element_root)
     end
 
-    if element_root.children then
-        for i,child in ipairs(element_root.children or {}) do
-            self:draw(child,element_root)
-        end
-    end
+    pen.draw_element(style.post_draw and element_info or nil)
 
-    if style.post_draw == true then
-        pen.draw_element(table.merge(
-            style, element_root.content, add_info))
-    end
     love.graphics.pop()
 end
 ---move to origin, set rotation
