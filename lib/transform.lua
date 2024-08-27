@@ -3,16 +3,9 @@ local proto=require('prototype')
 local Transform  = proto{name='Transform'}
 
 function Transform:new(a,b,c,d)
-    if a==nil then
-        self.data = {
-            1, 0,
-            0, 1 }
-    else
-        self.data = {
-            a, b,
-            c, d }
-        
-    end
+    self.data = {
+        a or 1, b or 0,
+        c or 0, d or 1 }
 end
 function Transform:set(a,b,c,d)
     self.data = {

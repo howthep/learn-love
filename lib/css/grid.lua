@@ -27,6 +27,7 @@ function grid.grid_1d(self,element)
     local dir=is_row and Vec(0,1) or Vec(1,0)
     local size_key=is_row and 'height' or 'width'
     local another_key=is_row and 'width' or 'height'
+
     local sum=Array(frs):reduce(FP.add)
     local parent_size=element.content[size_key]
     local previous
@@ -44,7 +45,7 @@ function grid.grid_1d(self,element)
         child.content=rectsize( x,y )
         child.content[size_key]=child_size
         child.content[another_key]=element.content[another_key]
-        previous=element.children[i]
+        previous=child
     end
 end
 ---like this: column=5,row=-1

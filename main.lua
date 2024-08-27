@@ -20,11 +20,6 @@ local css = require('css')(scene.class)
 function love.draw()
     -- Scene.root:render(T)
     local cards=scene.ui.children[4].children[2].children
-    for i,card in ipairs(cards) do
-        -- card.style.rotate=0.2*math.sin(T)
-        card.style.rotate=T*2
-        -- break
-    end
     css:render(scene.ui)
 end
 function love.update(dt)
@@ -36,6 +31,9 @@ function love.load()
     love.mouse.setPosition(w/2,h/2)
     -- pen.size=Vec(200,200)
     -- pen:push(Shape.Line(pen.center,Vec(100,100)))
+end
+function love.resize(w,h)
+    -- scene.ui.content.wi
 end
 function love.mousereleased(x,y)
 end

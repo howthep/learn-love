@@ -1,4 +1,5 @@
 local Array=require('array')
+local rectsize=require('data.rectsize')
 ---@class css
 local export={}
 ---from a class_table to a style_table
@@ -40,15 +41,18 @@ function export:unit_convert(keys,element,parent)
     if type(keys)~='table' then
         keys={keys}
     end
+    parent=parent or {content=rectsize}
     local st=self:get_style(element)
     local t={}
     local vw, vh = get_vwh()
     for i,key in ipairs(keys) do
         local x = st[key]
         if type(x) == 'string' then
+            -- x=x
             local map = { vw = vw, vh = vh }
-            local num, unit = string.match(x, '([%d%.]+)(%a+)')
-            x = map[unit] * num / 100
+            map['%']=parent.content[key]
+            local num, unit = string.match(x, '([%d%.]+)([%a%%]+)')
+            x = map[unit] * num/100
         end
         table.insert(t, x)
     end

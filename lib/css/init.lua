@@ -3,13 +3,12 @@ local Vec=require('vec')
 local Shape=require('shape')
 local Color=Shape.Color
 local prototype=require('prototype')
-local pen=require('pen')
 local rectsize=require('data.rectsize')
 ---@class css
 local css=prototype{name='css'}
 
 local _path=(...)
-local libs={'grid','layout','style','draw'}
+local libs={'grid','layout','style','draw','interact'}
 for i,lib in ipairs(libs) do
     table.update(css, require(_path..'.'..lib))
 end
@@ -43,27 +42,14 @@ function css:new(t)
 end
 ---comment
 function css:render(element_root)
+    element_root.content = rectsize(
+        0, 0,
+        self:get_width(element_root),
+        self:get_height(element_root)
+    )
     self:layout(element_root)
+    self:interact(element_root)
     self:draw(element_root)
-end
-function css:draw(element_root,parent)
-    local style=self:get_style(element_root)
-    love.graphics.push()
-    local offset=self:set_transform(element_root,parent)
-
-    local add_info={ text = element_root.text, offset=offset}
-    local element_info = table.merge( style, element_root.content, add_info)
-
-    self:sorted_child(element_root)
-    pen.draw_element(style.post_draw and nil or element_info)
-
-    for i,child in ipairs(self:sorted_child(element_root)) do
-        self:draw(child,element_root)
-    end
-
-    pen.draw_element(style.post_draw and element_info or nil)
-
-    love.graphics.pop()
 end
 ---move to origin, set rotation
 ---@param element_root any

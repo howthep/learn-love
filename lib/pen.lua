@@ -108,6 +108,7 @@ function Pen.text(config)
     if padding then
         x=x+padding[2]
         y=y+padding[1]
+        limit=limit-padding[2]*2
     end
     love.graphics.setFont(font)
     love.graphics.setColor(color:table())

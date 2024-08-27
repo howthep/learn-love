@@ -33,4 +33,8 @@ function rectsize:origin()
     local cx,cy=self:center()
     return self.ox or cx,self.oy or cy
 end
+function rectsize:is_hover(x,y)
+    return x>self.x and y>self.y and
+    x<self.x+self.width and y<self.y+self.height
+end
 return rectsize

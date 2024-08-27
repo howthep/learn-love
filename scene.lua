@@ -1,6 +1,6 @@
 local ui=require('element')
 local Color=require('shape').Color
-local TODO='z-index'
+local TODO='dragable'
 local Class={
     text_center={
         align='center'
@@ -67,7 +67,10 @@ local function card(text,style)
     local b=math.random()
     local c={
         style=table.merge({
-            display='grid',
+            display='inline-grid',
+            -- width=100,
+            height='100%',
+            wh_ratio=4/5,
             row={1,1},
             border_width=5,
             -- border_radius=10,
@@ -75,6 +78,25 @@ local function card(text,style)
             post_draw=true,
             -- bg=Color(.6,.2,.2)
         },style),
+        cache={},
+        on_hover=function (self,x,y)
+            local st =self.style
+            if not self.last_frame_hovered then
+            self.cache['border_color']=st.border_color
+            end
+            st.border_color=Color(.9,.7,.3)
+            st.z_index=10
+            st.rotate=.2
+            
+            print(text,'hovered')
+        end,
+        off_hover=function (self)
+            local st =self.style
+            self.style.border_color= self.cache['border_color']
+            self.style.z_index=0
+            st.rotate=.0
+            print('off hover')
+        end,
         children={
             {
                  text = '###',
@@ -95,6 +117,7 @@ local function card(text,style)
     return c
 end
 local bottom_cards= {
+    name='bottom_cards',
     class = 'rosef',
     style = {
         color = Color(.9, .8, .9),
@@ -102,10 +125,11 @@ local bottom_cards= {
         border_color = Color(.3, .7, .8),
         align = 'center',
         display='grid',
-        column={1,3,1}
+        column={1,6,1}
     },
     children = { ui.span {
-        text = 'child',
+        text = 'to_draw',
+        class={'text_center'},
         style = {
             bg = Color(0, 0.5, 1),
             padding = { 0, 10 },
@@ -115,29 +139,30 @@ local bottom_cards= {
             z_index=10,
             size = 40,
             bg = Color(1, 0, .5),
-            display='grid',
-            column={1,1,1}
+            -- display='grid',
+            -- column={1,1,1,1,1}
         },
+        -- on_hover=function (self,x,y)
+        --     print(x,y,'hovered')
+        -- end,
+        -- off_hover=function (self)
+        --     print('off hover')
+        -- end,
         children={
-            card('strike',{
-                z_index=10,
-                rotate = .1,
-                origin = { 0, 50 },
+            card('strike', {
             }),
             card('draw',{
-                origin = { 50, 50 },
             }),
-            card('defend',{
-                z_index=5,
-                origin = { 100, 0 },
-            }),
+            card('defend',{ }),
+            card('curse',{ }),
+            card('power',{ }),
         }
     }, ui.span {
-        text = 'child_3_lisad',
-        class={'p_20'},
+        text = 'discarded',
+        class={'p_20','text_center'},
         style = {
             color = Color(0, 0, 0),
-            size = 20,
+            size = 30,
             bg = Color(.5, 1, .5)
         }
     }
@@ -147,7 +172,7 @@ local Scene = {
     class = 'viewport',
     style={
         display='grid',
-        row={1,1,5,3}
+        row={1,1,9,3}
     },
     children={
         status,
