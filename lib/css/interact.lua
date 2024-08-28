@@ -8,13 +8,10 @@ function export:drag_it(element)
             if element.off_hover then
             element:off_hover()
             element.last_frame_hovered=false
-            else
-                element.style.left=0
-                element.style.top=0
             end
+            self.drag_start=nil
+            self.draging=nil
         end
-        self.drag_start=nil
-        self.draging=nil
         -- element.style.left=0
         return false
     end
@@ -23,7 +20,7 @@ function export:drag_it(element)
     local x,y=love.mouse.getPosition()
     local is_hovered=element.content:is_hover(x-st.left,y-st.top)
 
-    if is_mouse_down and self.drag_start == nil and is_hovered then
+    if is_mouse_down and self.draging == nil and is_hovered then
         self.draging=element
         self.drag_before=Vec(st.left,st.top)
     end
@@ -33,7 +30,7 @@ function export:drag_it(element)
             self.drag_start = Vec(x, y)
         end
         local s = element.style
-        local offset = Vec(x, y) - self.drag_start
+        local offset = Vec(x, y) - self.drag_start+self.drag_before
         s.left,s.top=offset:unpack()
         return true
     end

@@ -21,6 +21,7 @@ local style_table_default = {
         size=30,
         top=0,
         left=0,
+        z_index=0,
     },
     span = {
         size = 30,

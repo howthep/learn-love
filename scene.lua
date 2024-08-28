@@ -88,21 +88,10 @@ local function card(text,style)
             if not self.last_frame_hovered then
                 st.border_color = st.border_color + Color(.4,.2,-.2)
             end
-            -- if is_mouse_down then
-            --     if not self.drag_start then
-            --         self.drag_start=Vec(x,y)
-            --     end
-            --     local offset=Vec(x,y)-self.drag_start
-            --     st.left,st.top=offset:unpack()
-            -- else
-            --     self.drag_start=nil
-            -- end
             st.z_index=10
             st.top=0
-            --     st.left=0
             -- st.rotate=.2
             
-            -- print(text,'hovered')
             return true
         end,
         off_hover=function (self)
