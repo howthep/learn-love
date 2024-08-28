@@ -1,6 +1,7 @@
 local ui=require('element')
+local Vec=require('vec')
 local Color=require('shape').Color
-local TODO='dragable'
+local TODO='dragable,position: relative'
 local Class={
     text_center={
         align='center'
@@ -73,29 +74,45 @@ local function card(text,style)
             wh_ratio=4/5,
             row={1,1},
             border_width=5,
+            dragable=true,
             -- border_radius=10,
-            border_color=Color(.8,.8,.9),
+            border_color=Color(.6,.6,.7),
             post_draw=true,
+            top=20,
             -- bg=Color(.6,.2,.2)
         },style),
         cache={},
         on_hover=function (self,x,y)
+            -- local is_mouse_down=love.mouse.isDown(1)
             local st =self.style
             if not self.last_frame_hovered then
-            self.cache['border_color']=st.border_color
+                st.border_color = st.border_color + Color(.4,.2,-.2)
             end
-            st.border_color=Color(.9,.7,.3)
+            -- if is_mouse_down then
+            --     if not self.drag_start then
+            --         self.drag_start=Vec(x,y)
+            --     end
+            --     local offset=Vec(x,y)-self.drag_start
+            --     st.left,st.top=offset:unpack()
+            -- else
+            --     self.drag_start=nil
+            -- end
             st.z_index=10
-            st.rotate=.2
+            st.top=0
+            --     st.left=0
+            -- st.rotate=.2
             
-            print(text,'hovered')
+            -- print(text,'hovered')
+            return true
         end,
         off_hover=function (self)
             local st =self.style
-            self.style.border_color= self.cache['border_color']
+            st.top=20
+            st.left=0
+            st.border_color=st.border_color-Color(.4,.2,-.2)
             self.style.z_index=0
             st.rotate=.0
-            print('off hover')
+            -- print('off hover')
         end,
         children={
             {

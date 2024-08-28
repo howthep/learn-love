@@ -84,7 +84,7 @@ function Vector:__tostring()
     s=string.format(fmt,self.name,s:join())
     return s
 end
-function Vector:table()
+function Vector:kv_table()
     local t={}
     self.keys:each(function (key)
         t[key]=self[key]
@@ -94,7 +94,7 @@ end
 function Vector:clone()
     local super=getmetatable(self)
     local new_v= super()
-    table.update(new_v,self:table())
+    table.update(new_v,self:kv_table())
     return new_v
 end
 function Vector:__concat(strin)

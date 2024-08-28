@@ -10,13 +10,6 @@ local export={}
 ---@param element_root any
 ---@param parent any
 function export:layout(element_root,parent)
-    -- if not element_root.content then
-    --     element_root.content = rectsize(
-    --          0,  0,
-    --         self:get_width(element_root),
-    --         self:get_height(element_root)
-    -- )
-    -- end
     if element_root.children then
         self:set_children_position(element_root)
         for i, c in ipairs(element_root.children)do
@@ -24,6 +17,7 @@ function export:layout(element_root,parent)
         end
     end
 end
+
 function export:get_height(element,parent)
     local style=self:get_style(element)
     if style.height then

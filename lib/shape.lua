@@ -11,12 +11,11 @@ local Color = proto_vector{
         g = 1,
         a = 1, }
 }
-Color.keys=Array{'r','g','b','a'}
+Color.keys=Array{'r','g','b'}
 function Color:new(r,g,b,a)
     self.r=r
     self.g=g
     self.b=b
-    self.a=a
 end
 function Color:table()
     return {self.r,self.g,self.b,self.a}

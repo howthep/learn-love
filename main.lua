@@ -24,6 +24,7 @@ function love.draw()
 end
 function love.update(dt)
     T=T+dt
+    print(1/dt)
 end
 
 function love.load()
