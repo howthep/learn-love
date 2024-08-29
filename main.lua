@@ -3,7 +3,6 @@ print(_VERSION)
 local Vec= require("vec")
 local Shape = require("shape")
 local Color=Shape.Color
-local Hex = require("hexgon")
 local Array=require('array')
 local FP=require('FP')
 local scene=require('scene')
@@ -17,14 +16,13 @@ love.graphics.push()
 
 
 local css = require('css')(scene.class)
+
 function love.draw()
     -- Scene.root:render(T)
-    local cards=scene.ui.children[4].children[2].children
     css:render(scene.ui)
 end
 function love.update(dt)
     T=T+dt
-    print(1/dt)
 end
 
 function love.load()

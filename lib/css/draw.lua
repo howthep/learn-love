@@ -14,12 +14,11 @@ local export={}
 function export:draw(element_root,parent)
     local style=self:get_style(element_root)
     love.graphics.push()
-    local offset=self:set_transform(element_root,parent)
+    local offset_to_leftup=self:set_transform(element_root,parent)
 
-    local add_info={ text = element_root.text, offset=offset}
+    local add_info={ text = element_root.text, offset=offset_to_leftup,draw=element_root.draw}
     local element_info = table.merge( style, element_root.content, add_info)
 
-    self:sorted_child(element_root)
     pen.draw_element(style.post_draw and nil or element_info)
 
     for i,child in self:sorted_child(element_root) do
@@ -52,26 +51,28 @@ end
 ---@param element any
 ---@return function
 function export:sorted_child(element,reverse)
-    local t=Array()
+    local no_z_child=Array()
     local zs={}
-    local z_child=Array()
+    local pz_child=Array()
+    local nz_child=Array()
     for i,child in ipairs(element.children or {})do
         local st=self:get_style(child)
-        if st.z_index then
-            z_child:push(child)
-            zs[child]=st.z_index
+        if st.z_index>0 then
+            pz_child:push(child)
+        elseif st.z_index<0 then
+            nz_child:push(child)
         else
-            t:push(child)
+            no_z_child:push(child)
         end
+        zs[child] = st.z_index
     end
-    local sorted_c= t+z_child:sorted(function (c1,c2)
+    local sort_f=function (c1,c2)
             return zs[c1] < zs[c2]
-    end)
+    end
+    local sorted_c = nz_child:sorted(sort_f) + no_z_child +
+        pz_child:sorted(sort_f)
     if reverse then
-        local len=#sorted_c
-        sorted_c=sorted_c:map(function (value,index,arr)
-            return arr[len-index+1]
-        end)
+        sorted_c=sorted_c:reversed()
     end
     local i=0
     return function ()

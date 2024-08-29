@@ -171,6 +171,12 @@ function Array:sorted(compare)
     table.sort(arr,compare)
     return arr
 end
+function Array:reversed()
+    local len = #self
+    return self:map(function(value, index, arr)
+        return arr[len - index + 1]
+    end)
+end
 function Array:max_min()
     local sorted = self:sorted()
     local min, max = sorted[1], sorted[#sorted]

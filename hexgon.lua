@@ -27,11 +27,11 @@ function Hexgon:move(dt)
 end
 
 local HexGrid=Shape{name='HexGrid'}
-function HexGrid:new(vec,size)
+function HexGrid:new(vec,size,rotate)
     HexGrid.super(self,vec)
     self.size=size or 20.0 -- radius of outer circle 
-    self.rotate=0
-    self.lw=2
+    self.rotate=rotate
+    self.lw=1
 end
 function HexGrid:touch(x,y)
     print(x,y)
@@ -75,9 +75,9 @@ function HexGrid:tr()
     )
 end
 function HexGrid:qr()
-    local base_angle=0
+    local base_angle=self.rotate+30
     local q_vec=Vec(1,0):rotate(base_angle,true)
-    local r_vec=Vec(1,0):rotate(-60,true)
+    local r_vec=Vec(1,0):rotate(base_angle-60,true)
     return q_vec,r_vec
 end
 function HexGrid:cube2vec(q,r,s)
@@ -95,10 +95,11 @@ function HexGrid:cube2vec(q,r,s)
     return ret
 end
 function HexGrid:hex_draw(q,r)
-    local hexgon=Hexgon(self:cube2vec(q,r),self.size,30)
+    local hexgon=Hexgon(self:cube2vec(q,r),self.size,self.rotate)
     hexgon:draw()
 end
 function HexGrid:draw()
+    love.graphics.setLineWidth(self.lw)
     local n=5
     for i=-n,n do
         for j=-n,n  do

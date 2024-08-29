@@ -10,6 +10,12 @@ function Pen.draw_element(config)
     if not config then
         return
     end
+
+    if config.draw then
+        config.draw(config)
+        return
+    end
+
     if config.border_radius then
         Pen.round_rect(config)
     else

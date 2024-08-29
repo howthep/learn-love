@@ -1,7 +1,10 @@
 local ui=require('element')
 local Vec=require('vec')
 local Color=require('shape').Color
-local TODO='dragable,position: relative'
+local TODO='battle map; sprite attack HP move '
+local Hex=require('hexgon').HexGrid
+local me=love.graphics.newImage('assets/me.png')
+local he=love.graphics.newImage('assets/he.png')
 local Class={
     text_center={
         align='center'
@@ -39,6 +42,7 @@ local status={
 }
 local relices={
     style={
+        bg=Color(0,.5,.6),
     },
     children={
         ui.span{
@@ -46,20 +50,40 @@ local relices={
             class='p_20'
         },
         ui.span{
-            text='E',
+            text='TODO: '..TODO,
             class='p_20'
         },
     }
 }
+local hex_r=50
+local hexgrid=Hex(Vec(),hex_r,0)
 local battle={
     style={
-        bg=Color(0,.5,.6),
+        z_index=-1
     },
+    draw = function(config)
+        print(love.timer.getFPS())
+        love.graphics.setColor(1, 0, .5)
+        local rs=300
+        love.graphics.stencil(function ()
+            local t=love.timer.getTime()
+            -- love.graphics.rectangle('fill',-rs,-rs,rs,rs)
+            love.graphics.circle('fill',0,0,rs+100*math.sin(t))
+        end)
+        love.graphics.setStencilTest('greater',0)
+        hexgrid:draw()
+        love.graphics.setColor(1, 1, 1)
+        local w,h= me:getWidth(),me:getHeight()
+        local scale=2*hex_r/w
+        -- scale=1
+        local x,y=hexgrid:cube2vec(-1,1):unpack()
+        love.graphics.draw(me,x,y,0,scale,scale,w/2,h/2)
+        x,y=hexgrid:cube2vec(1,2):unpack()
+        love.graphics.draw(he,x,y,0,scale,scale,w/2,h/2)
+        love.graphics.setStencilTest()
+        love.graphics.setStencilTest()
+    end,
     children={
-        ui.span{
-            text='TODO: '..TODO,
-            class='p_20'
-        },
     }
 }
 local function card(text,style)
@@ -69,30 +93,22 @@ local function card(text,style)
     local c={
         style=table.merge({
             display='inline-grid',
-            -- width=100,
             height='100%',
             wh_ratio=4/5,
             row={1,1},
             border_width=5,
             dragable=true,
-            -- border_radius=10,
             border_color=Color(.6,.6,.7),
             post_draw=true,
             top=20,
-            -- bg=Color(.6,.2,.2)
         },style),
-        cache={},
         on_hover=function (self,x,y)
-            -- local is_mouse_down=love.mouse.isDown(1)
             local st =self.style
             if not self.last_frame_hovered then
                 st.border_color = st.border_color + Color(.4,.2,-.2)
             end
             st.z_index=10
             st.top=0
-            -- st.rotate=.2
-            
-            return true
         end,
         off_hover=function (self)
             local st =self.style
@@ -101,7 +117,6 @@ local function card(text,style)
             st.border_color=st.border_color-Color(.4,.2,-.2)
             self.style.z_index=0
             st.rotate=.0
-            -- print('off hover')
         end,
         children={
             {
@@ -145,23 +160,13 @@ local bottom_cards= {
             z_index=10,
             size = 40,
             bg = Color(1, 0, .5),
-            -- display='grid',
-            -- column={1,1,1,1,1}
         },
-        -- on_hover=function (self,x,y)
-        --     print(x,y,'hovered')
-        -- end,
-        -- off_hover=function (self)
-        --     print('off hover')
-        -- end,
         children={
-            card('strike', {
-            }),
-            card('draw',{
-            }),
-            card('defend',{ }),
-            card('curse',{ }),
-            card('power',{ }),
+            card('strike', {}),
+            card('draw', {}),
+            card('defend', {}),
+            card('curse', {}),
+            card('power', {}),
         }
     }, ui.span {
         text = 'discarded',
