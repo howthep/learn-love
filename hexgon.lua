@@ -1,8 +1,9 @@
 local Shape=require('shape').Shape
 local Vec=require('vec')
 local Transform=require('transform')
+---@class Hexgon:Shape
 local Hexgon=Shape{name='Hexgon'}
-
+local ground=love.graphics.newImage('assets/ground.png')
 function Hexgon:new(vec,r,base_angle)
     Hexgon.super(self,vec)
     self.r=r or 10
@@ -26,6 +27,7 @@ end
 function Hexgon:move(dt)
 end
 
+---@class HexGrid:Shape
 local HexGrid=Shape{name='HexGrid'}
 function HexGrid:new(vec,size,rotate)
     HexGrid.super(self,vec)
@@ -95,8 +97,12 @@ function HexGrid:cube2vec(q,r,s)
     return ret
 end
 function HexGrid:hex_draw(q,r)
-    local hexgon=Hexgon(self:cube2vec(q,r),self.size,self.rotate)
-    hexgon:draw()
+    local x,y=self:cube2vec(q,r):unpack()
+    local w, h = ground:getWidth(), ground:getHeight()
+    local scale = 2 * self.size / w
+    love.graphics.draw(ground, x, y, 0, scale, scale, w / 2, h / 2)
+    -- local hexgon=Hexgon(self:cube2vec(q,r),self.size,self.rotate)
+    -- hexgon:draw()
 end
 function HexGrid:draw()
     love.graphics.setLineWidth(self.lw)

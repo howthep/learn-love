@@ -17,7 +17,7 @@ function love.conf(t)
     t.window.borderless=false
     t.modules.joystick=false
     t.modules.physics=false
-    t.window.fullscreen=true
+    -- t.window.fullscreen=true
     t.window.resizable=false
     -- t.window.msaa=2
 end

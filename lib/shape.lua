@@ -1,26 +1,10 @@
 local proto_vector=require('vector')
+local Color=require('color')
 local Node=require('node')
 local Vec = require('vec')
 local Array=require('array')
----@class Color:prototype
-local Color = proto_vector{
-    name = 'Color',
-    default = {
-        r = 1,
-        b = 1,
-        g = 1,
-        a = 1, }
-}
-Color.keys=Array{'r','g','b'}
-function Color:new(r,g,b,a)
-    self.r=r
-    self.g=g
-    self.b=b
-end
-function Color:table()
-    return {self.r,self.g,self.b,self.a}
-end
--- Shape
+
+---@class Shape:prototype
 local Shape = Node{name='Shape',lw=2,color=Color()}
 function Shape:new(config)
     Shape.super(self,config)

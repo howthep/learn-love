@@ -37,4 +37,7 @@ function rectsize:is_hover(x,y)
     return x>self.x and y>self.y and
     x<self.x+self.width and y<self.y+self.height
 end
+function rectsize:__tostring()
+    return string.format('Rectsize:(%s,%s,%s,%s)',self.x,self.y,self.width,self.height)
+end
 return rectsize

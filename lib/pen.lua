@@ -6,6 +6,11 @@ local Color=require('shape').Color
 local Vec=require('vec')
 local Pen={}
 local fonts={}
+function Pen.bezier(bezier)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.setLineWidth(4)
+    love.graphics.line(bezier:render())
+end
 function Pen.draw_element(config)
     if not config then
         return

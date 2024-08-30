@@ -1,7 +1,7 @@
 local proto=require('prototype')
 local unp=require("version").unp
 local FP=require('FP')
----@class Array
+---@class Array:prototype
 ---@operator call:Array
 local Array=proto{name='Array'}
 
