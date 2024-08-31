@@ -16,8 +16,8 @@ function Pen.draw_element(config)
         return
     end
 
-    if config.draw then
-        config.draw(config)
+    if config.element.draw then
+        config.element:draw(config)
         return
     end
 

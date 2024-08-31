@@ -1,9 +1,9 @@
 local Shape=require('shape').Shape
+local Array=require('array')
 local Vec=require('vec')
 local Transform=require('transform')
 ---@class Hexgon:Shape
 local Hexgon=Shape{name='Hexgon'}
-local ground=love.graphics.newImage('assets/ground.png')
 function Hexgon:new(vec,r,base_angle)
     Hexgon.super(self,vec)
     self.r=r or 10
@@ -28,12 +28,13 @@ function Hexgon:move(dt)
 end
 
 ---@class HexGrid:Shape
-local HexGrid=Shape{name='HexGrid'}
+local HexGrid=Shape{name='HexGrid',rotate=0,size=20}
 function HexGrid:new(vec,size,rotate)
     HexGrid.super(self,vec)
-    self.size=size or 20.0 -- radius of outer circle 
-    self.rotate=rotate
+    self.size=size  -- radius of outer circle 
+    self.rotate=rotate 
     self.lw=1
+    self.ground = love.graphics.newImage('assets/ground.png')
 end
 function HexGrid:touch(x,y)
     print(x,y)
@@ -51,23 +52,16 @@ local function round(q)
             return -round(-q)
         end
 end
-function HexGrid:vec2cube(vec,y)
-    -- local s=0
-    -- 1 1 2 1 2
-    -- vec is number
-    -- 1. project to axis
-    -- vec=vec:rotate(-90,true)
+local function vec2qrs(vec_qr)
+    local q,r=vec_qr:unpack()
+    return q,r,-q-r
+end
+function HexGrid:vec2cube(vec)
     local step =self.size*math.sqrt(3)
-    local tr=self:tr()
-    local sign=vec:sign()
-    -- print(vec,sign)
-    local half_step=step/2
-    -- local vec_h=tr:inv()*vec
-    local vec_h=tr:inv()*vec
-    -- vec_h=vec_h:abs():map(math.floor)*vec_h:sign()
-    vec_h=vec_h/step
-    return vec_h:map(round):unpack()
-
+    local xy2qr=self:tr():inv()
+    local vec_qr=xy2qr*vec
+    vec_qr=vec_qr/step
+    return vec_qr:map(round):unpack()
 end
 function HexGrid:tr()
     local q,r=self:qr()
@@ -97,6 +91,7 @@ function HexGrid:cube2vec(q,r,s)
     return ret
 end
 function HexGrid:hex_draw(q,r)
+    local ground=self.ground
     local x,y=self:cube2vec(q,r):unpack()
     local w, h = ground:getWidth(), ground:getHeight()
     local scale = 2 * self.size / w

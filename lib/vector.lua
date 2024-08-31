@@ -108,6 +108,14 @@ function Vector:len()
     end)
     return math.sqrt(square_sum)
 end
+function Vector:distance(vec)
+    return (self-vec):len()
+end
+function Vector:sum()
+    return self:reduce(function (sum,v)
+        return sum+v
+    end,0)
+end
 function Vector:normal()
     local len=self:len()
     if len==0 then

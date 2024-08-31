@@ -16,7 +16,7 @@ function export:draw(element_root,parent)
     love.graphics.push()
     local offset_to_leftup=self:set_transform(element_root,parent)
 
-    local add_info={ text = element_root.text, offset=offset_to_leftup,draw=element_root.draw}
+    local add_info={ text = element_root.text, offset=offset_to_leftup,element=element_root}
     local element_info = table.merge( style, element_root.content, add_info)
 
     pen.draw_element(style.post_draw and nil or element_info)

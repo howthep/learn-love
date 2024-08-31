@@ -45,11 +45,13 @@ function css:new(t)
 end
 ---comment
 function css:render(element_root)
-    element_root.content = rectsize(
-        0, 0,
-        self:get_width(element_root),
-        self:get_height(element_root)
-    )
+    if not element_root.content then
+        element_root.content = rectsize(
+            0, 0,
+            self:get_width(element_root),
+            self:get_height(element_root)
+        )
+    end
     self:layout(element_root)
     self:interact(element_root)
     self:draw(element_root)
