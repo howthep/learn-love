@@ -1,20 +1,18 @@
-local proto_vector=require('vector')
+local prototype=require('prototype')
 local Color=require('color')
-local Node=require('node')
 local Vec = require('vec')
 local Array=require('array')
 
----@class Shape:prototype
-local Shape = Node{name='Shape',lw=2,color=Color()}
+---@class Shape
+local Shape = prototype{name='Shape',lw=2,color=Color(),center=Vec()}
 function Shape:new(config)
-    Shape.super(self,config)
 end
 function Shape:move(dt)
     -- self.x=self.x+self.speed*dt
 end
 function Shape:set_env()
-    love.graphics.setColor(self.color:table())
-    love.graphics.setLineWidth(self.lw)
+    -- love.graphics.setColor(self.color:table())
+    -- love.graphics.setLineWidth(self.lw)
 end
 function Shape:render()
     self:set_env()

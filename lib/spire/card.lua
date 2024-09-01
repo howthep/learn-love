@@ -1,4 +1,5 @@
 local Color = require('color')
+local ui=require('element')
 local prototype = require('prototype')
 local Card = prototype { name = 'card' }
 ---comment
@@ -66,4 +67,57 @@ function Card:off_hover()
     st.rotate = .0
 end
 
-return Card
+local manager= prototype{name='card_manager'}
+
+local function cm(Spire)
+    
+local bottom_cards= {
+    name='bottom_cards',
+    -- class = 'rosef',
+    style = {
+        color = Color(.9, .8, .9),
+        -- bg = Color(.3, .4, .3),
+        border_color = Color(.3, .7, .8),
+        align = 'center',
+        display='grid',
+        column={1,6,1},
+    },
+    children = { ui.span {
+        text = 'to_draw',
+        class={'text_center'},
+        style = {
+            bg = Color(0, 0.5, 1),
+            padding = { 0, 10 },
+        },
+    }, {
+        style = {
+            z_index=10,
+            size = 40,
+            -- bg = Color(1, 0, .5),
+        },
+        children={
+            Card{text='strike', style={},spire=Spire,
+            use=function ()
+                print('strike')
+            end
+        },
+            Card{text='move 2', spire=Spire,range=2,
+            use=function (self,config)
+                config.player.center=config.xy
+            end
+        },
+        }
+    }, ui.span {
+        text = 'discarded',
+        class={'p_20','text_center'},
+        style = {
+            color = Color(0, 0, 0),
+            size = 30,
+            bg = Color(.5, 1, .5)
+        }
+    },
+    }
+}
+return bottom_cards
+end
+return cm

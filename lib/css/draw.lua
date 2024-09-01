@@ -1,8 +1,7 @@
 local Array=require('array')
 local Vec=require('vec')
 local pen=require('pen')
-local Shape=require('shape')
-local Color=Shape.Color
+local Color=require('color')
 local rectsize=require('data.rectsize')
 ---@class css
 local export={}

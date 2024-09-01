@@ -1,5 +1,5 @@
 local Array=require('array')
-local Color=require('shape').Color
+local Color=require('color')
 local proto=require('prototype')
 local Line=require('shape').Line
 local Collid=proto{name="collid"}

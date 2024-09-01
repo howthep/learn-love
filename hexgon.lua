@@ -1,11 +1,11 @@
-local Shape=require('shape').Shape
+local prototype=require('prototype')
 local Array=require('array')
 local Vec=require('vec')
 local Transform=require('transform')
----@class Hexgon:Shape
-local Hexgon=Shape{name='Hexgon'}
+---@class Hexgon
+local Hexgon=prototype{name='Hexgon',center=Vec()}
 function Hexgon:new(vec,r,base_angle)
-    Hexgon.super(self,vec)
+    self.center=vec
     self.r=r or 10
     self.base_angle=base_angle or 0
 end
@@ -27,10 +27,10 @@ end
 function Hexgon:move(dt)
 end
 
----@class HexGrid:Shape
-local HexGrid=Shape{name='HexGrid',rotate=0,size=20}
+---@class HexGrid
+local HexGrid=prototype{name='HexGrid',rotate=0,size=50,center=Vec()}
 function HexGrid:new(vec,size,rotate)
-    HexGrid.super(self,vec)
+    self.center=vec
     self.size=size  -- radius of outer circle 
     self.rotate=rotate 
     self.lw=1

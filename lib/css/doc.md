@@ -5,3 +5,8 @@ offset to parent
 - display: block|inline|grid|inline-grid
 - color: text color
 - bg: background color
+- border-
+    - width
+    - color
+    - radius
+- compose: {class1, class2}

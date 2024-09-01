@@ -1,10 +1,10 @@
 local Array=require('array')
 local Vec=require('vec')
-local Shape=require('shape')
-local Color=Shape.Color
+local Color=require('color')
 local prototype=require('prototype')
 local rectsize=require('data.rectsize')
 ---@class css
+---@operator call:css
 local css=prototype{name='css'}
 
 local _path=(...)
@@ -43,7 +43,7 @@ local style_table_default = {
 function css:new(t)
     self.style_table=table.merge(style_table_default,t)
 end
----comment
+
 function css:render(element_root)
     if not element_root.content then
         element_root.content = rectsize(

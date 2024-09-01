@@ -1,9 +1,7 @@
 local rectsize=require('data.rectsize')
 local pen=require('pen')
 local Vec=require('vec')
-local Shape=require('shape')
 local FP=require('FP')
-local Color=Shape.Color
 ---@class css
 local export={}
 ---set x,y,width,height

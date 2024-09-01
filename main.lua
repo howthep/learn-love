@@ -5,27 +5,27 @@ local Shape = require("shape")
 local Color=Shape.Color
 local Array=require('array')
 local FP=require('FP')
-local scene=require('scene')
--- local Scene=require('scene')
-local config = {}
+local Spire=require('spire')
+
 local T=0
 local font_size=30
-local font=love.graphics.newFont('simhei.ttf',font_size)
-love.graphics.push()
+-- local font=love.graphics.newFont('simhei.ttf',font_size)
 
 
-local css = require('css')(scene.class)
+local css = require('css')(require('style_class'))
+local spire=Spire()
 
 function love.draw()
-    -- Scene.root:render(T)
-    css:render(scene.ui)
+    css:render(spire)
 end
+--- see https://www.love2d.org/wiki/love.run
+--- after update, call origin,clear,draw
 function love.update(dt)
     T=T+dt
 end
 
 function love.load()
-    local w,h,_=love.window.getMode()
+    -- local w,h,_=love.window.getMode()
     -- love.mouse.setPosition(w/2,h/2)
     -- pen.size=Vec(200,200)
     -- pen:push(Shape.Line(pen.center,Vec(100,100)))

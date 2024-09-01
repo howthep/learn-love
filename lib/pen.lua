@@ -2,7 +2,7 @@
 -- draw everything
 -- normal coordinate [-1,1]
 -- manage drawing, coloring, font
-local Color=require('shape').Color
+local Color=require('color')
 local Vec=require('vec')
 local Pen={}
 local fonts={}

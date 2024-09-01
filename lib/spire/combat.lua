@@ -2,18 +2,29 @@ local prototype=require('prototype')
 local Array=require('array')
 local pen=require('pen')
 local Vec=require('vec')
+local cm=require('spire.card')
 local Hexgrid=require('hexgon').HexGrid
+
+---@class combat_manager
+---@operator call:combat_manager
 local combat=prototype{name='combat'}
----comment
----@param config table {spire,hex_size}
+
 function combat:new(config)
     self.hexgrid=Hexgrid(Vec(),config.hex_size or 50)
-    self.style={
-        z_index=-1
-    }
     self.spire=config.spire
+    self.style={
+        z_index=-1,
+        display='grid',
+        row={3,1}
+    }
+    self.children={
+        {},
+        cm(self.spire)
+    }
 end
 
+---start a combat with enemy and each qr coordinate
+---@param config table {enemy,qrs,player}
 function combat:start(config)
     self.enemy=config.enemy
     self.qrs=config.qrs
