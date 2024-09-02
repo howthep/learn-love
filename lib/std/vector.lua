@@ -81,8 +81,8 @@ function Vector:__tostring()
     local s=self.keys:map(function (key)
         return string.format('%s: %s',key,self[key])
     end)
-    s=string.format(fmt,self.name,s:join())
-    return s
+    local str=string.format(fmt,self.name,s:join())
+    return str
 end
 function Vector:kv_table()
     local t={}
@@ -129,5 +129,10 @@ function Vector:sign()
 end
 function Vector:abs()
     return self:map(math.abs)
+end
+function Vector:__eq(v)
+    return self.keys:every(function (key)
+        return self[key]==v[key]
+    end)   
 end
 return Vector

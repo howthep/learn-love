@@ -8,7 +8,7 @@ local path=(...)
 local Combat=require('spire.combat')
 local card=require(path..'.card')
 
-local TODO='sprite attack, HP '
+local TODO='sprite attack animation, HP '
 
 ---@class Spire
 local Spire = prototype {
@@ -25,14 +25,17 @@ function Spire:new()
     })
     
     local width = self.combat.hexgrid.size * 2
-    Spire.player=Spirte(Vec(),'assets/me.png',width)
+    Spire.player=Spirte(self.combat.hexgrid:cube2vec(1,0),'assets/me.png',width)
     local he=Spirte(Vec(),'assets/he.png',width)
-    self.combat:start({
-        enemy = { he },
+    local ye=Spirte(Vec(),'assets/he.png',width)
+    local combat_setting={
+        enemy = { he,ye},
         qrs = {
-        {1,3}
+            { 1, 2 },
+            {2,0},
         }
-    })
+    }
+    self.combat:start(combat_setting)
     self.status = {
         style = {
             bg = Color(.1, .2, .2)

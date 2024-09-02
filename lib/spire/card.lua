@@ -6,7 +6,7 @@ local Card = prototype { name = 'card' }
 ---@param config table {text,style,spire}
 function Card:new(config)
     local text = config.text
-    config.text=nil
+    -- config.text=nil
     local r = math.random()
     local g = math.random()
     local b = math.random()
@@ -21,12 +21,16 @@ function Card:new(config)
         post_draw = true,
         top = 20,
     }, config.style or {})
+    config.style=nil
+    config.img='assets/card/'..config.img
     self.children = {
         {
-            text = '###',
+            -- text = '###',
             class = 'text_center',
             style = {
-                bg = Color(r, g, b)
+                img=config.img,
+                color=Color(1,1,1)
+                -- bg = Color(r, g, b)
             }
         },
         {
@@ -37,12 +41,14 @@ function Card:new(config)
             }
         }
     }
-    config.style=nil
     table.update(self,config)
 end
 
 function Card:use()
     print('unwritten use function')
+end
+function Card:__tostring()
+    return self.text
 end
 
 function Card:on_hover(x, y)
@@ -52,7 +58,7 @@ function Card:on_hover(x, y)
     end
     st.z_index = 10
     st.top = 0
-    if love.mouse.isDown(1) then
+    if love.mouse.isDown(1) and not self.spire.selected_card then
         self.spire.selected_card = self
     end
     -- print(self.content)
@@ -67,7 +73,11 @@ function Card:off_hover()
     st.rotate = .0
 end
 
-local manager= prototype{name='card_manager'}
+local Card_Manager= prototype{name='card_manager'}
+function Card_Manager:new()
+end
+function Card_Manager:draw()
+end
 
 local function cm(Spire)
     
@@ -89,24 +99,28 @@ local bottom_cards= {
             bg = Color(0, 0.5, 1),
             padding = { 0, 10 },
         },
-    }, {
-        style = {
-            z_index=10,
-            size = 40,
-            -- bg = Color(1, 0, .5),
-        },
-        children={
-            Card{text='strike', style={},spire=Spire,
-            use=function ()
-                print('strike')
-            end
-        },
-            Card{text='move 2', spire=Spire,range=2,
-            use=function (self,config)
-                config.player.center=config.xy
-            end
-        },
-        }
+        }, {
+            style = {
+                z_index = 10,
+                size = 40,
+                -- bg = Color(1, 0, .5),
+            },
+            children = {
+                Card { text = 'strike 3',damage=3,
+                    spire = Spire, range = 1, target = 'enemy',
+                    img='strike.png',
+                    use = function(self,config)
+                        config.target:hurt(self.damage)
+                    end
+                },
+                Card { text = 'move 2',
+                spire = Spire, range = 2, target = 'space',
+                img='move.png',
+                    use = function(self, config)
+                        config.player.center = config.xy
+                    end
+                },
+            }
     }, ui.span {
         text = 'discarded',
         class={'p_20','text_center'},

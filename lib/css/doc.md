@@ -5,6 +5,7 @@ offset to parent
 - display: block|inline|grid|inline-grid
 - color: text color
 - bg: background color
+- img: background image
 - border-
     - width
     - color

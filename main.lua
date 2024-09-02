@@ -6,6 +6,7 @@ local Color=Shape.Color
 local Array=require('array')
 local FP=require('FP')
 local Spire=require('spire')
+local timer=require('timer')
 
 local T=0
 local font_size=30
@@ -21,10 +22,11 @@ end
 --- see https://www.love2d.org/wiki/love.run
 --- after update, call origin,clear,draw
 function love.update(dt)
-    T=T+dt
+    timer.update(dt)
 end
 
 function love.load()
+    print('load')
     -- local w,h,_=love.window.getMode()
     -- love.mouse.setPosition(w/2,h/2)
     -- pen.size=Vec(200,200)

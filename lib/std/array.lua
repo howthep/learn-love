@@ -150,6 +150,9 @@ function Array:unshift()
     -- pop at head
     return table.remove(self,1)
 end
+function Array:remove(i)
+    return table.remove(self,i)
+end
 function Array:exist(func)
     -- check if at least one item satisfies condition
     for i,v in ipairs(self) do
@@ -159,6 +162,15 @@ function Array:exist(func)
         end
     end
     return false
+end
+function Array:every(func)
+    for i,v in ipairs(self) do
+        local bool=func(v,i,self)
+        if bool==false then
+            return false
+        end
+    end
+    return true
 end
 ---return ascend order,
 --- 
@@ -182,6 +194,8 @@ function Array:max_min()
     local min, max = sorted[1], sorted[#sorted]
     return max, min
 end
+---@param seperator string|nil
+---@return string
 function Array:join(seperator)
     seperator=seperator or ', '
     return table.concat(self,seperator)

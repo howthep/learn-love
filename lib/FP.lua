@@ -25,6 +25,12 @@ end
 function FP.is_zero(v)
     return v==0
 end
+function FP.remove_minus_0(v)
+    if v == 0 then
+        return 0
+    end
+    return v
+end
 function FP.sign(x)
     if x > 0 then
         return 1

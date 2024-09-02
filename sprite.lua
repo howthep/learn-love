@@ -1,5 +1,8 @@
 local Vec = require('vec')
 local prototype=require('prototype')
+local pen=require('pen')
+local Color=require('color')
+local timer=require('timer')
 ---@class Sprite
 local Sprite =prototype{name='Sprite',center=Vec()}
 
@@ -10,6 +13,7 @@ function Sprite:new(center,img_path,width,ops)
     self.iw,self.ih=self.img:getWidth(),self.img:getHeight()
     self.width=width  or self.iw
     self.rotation=0
+    self.color=Color()
     -- quad
     if ops then
         self.quad=ops.quad
@@ -37,6 +41,7 @@ function Sprite:move(velocity)
 end
 function Sprite:draw(frame_id)
     -- print('draw start')
+    love.graphics.setColor(self.color:table())
     local x,y=self.center:unpack()
     -- print(x,y)
     local sclae=self.width/self.iw
@@ -51,5 +56,38 @@ function Sprite:draw(frame_id)
         love.graphics.draw(self.img,
         x, y, self.rotation, sclae, sclae, self.iw / 2, self.ih / 2)
     end
+    if self.hurt_info then
+        self:show_hurt(self.hurt_info)
+    end
+end
+function Sprite:show_hurt(config)
+    local x,y=self.center:unpack()
+    local sclae=self.width/self.iw
+    pen.text{
+        text=config.text,
+        offset=Vec(x-self.width/2,y-self.ih*sclae/1.5)+config.offset,
+        color=config.color,
+        width=self.width,
+        size=40
+    }
+end
+function Sprite:hurt(damage)
+    print('damage',damage)
+    timer.interval(function (time)
+        local end_time=2
+        local alpha=1-time/end_time
+        self.hurt_info={
+            text=damage,
+            offset=Vec(10*math.sin(time*6),-time*30),
+            color=Color(1,0,0,math.sin(alpha*math.pi/2))
+        }
+        if time>end_time then
+            self.hurt_info=nil
+            return true
+        end
+    end)
+end
+function Sprite:__tostring()
+    return string.format('%s,%s',self.img_path,self.center)
 end
 return Sprite

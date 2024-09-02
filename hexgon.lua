@@ -28,6 +28,7 @@ function Hexgon:move(dt)
 end
 
 ---@class HexGrid
+---@operator call:HexGrid
 local HexGrid=prototype{name='HexGrid',rotate=0,size=50,center=Vec()}
 function HexGrid:new(vec,size,rotate)
     self.center=vec
@@ -56,6 +57,10 @@ local function vec2qrs(vec_qr)
     local q,r=vec_qr:unpack()
     return q,r,-q-r
 end
+---return q,r
+---@param vec any
+---@return number
+---@return number
 function HexGrid:vec2cube(vec)
     local step =self.size*math.sqrt(3)
     local xy2qr=self:tr():inv()
