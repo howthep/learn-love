@@ -95,21 +95,24 @@ function HexGrid:cube2vec(q,r,s)
     -- at screen space
     return ret
 end
-function HexGrid:hex_draw(q,r)
-    local ground=self.ground
+function HexGrid:draw_qr(q,r)
     local x,y=self:cube2vec(q,r):unpack()
+    self:draw_xy(x,y)
+    -- local hexgon=Hexgon(self:cube2vec(q,r),self.size,self.rotate)
+    -- hexgon:draw()
+end
+function HexGrid:draw_xy(x,y)
+    local ground=self.ground
     local w, h = ground:getWidth(), ground:getHeight()
     local scale = 2 * self.size / w
     love.graphics.draw(ground, x, y, 0, scale, scale, w / 2, h / 2)
-    -- local hexgon=Hexgon(self:cube2vec(q,r),self.size,self.rotate)
-    -- hexgon:draw()
 end
 function HexGrid:draw()
     love.graphics.setLineWidth(self.lw)
     local n=5
     for i=-n,n do
         for j=-n,n  do
-            self:hex_draw(i,j)
+            self:draw_qr(i,j)
         end
     end
 end

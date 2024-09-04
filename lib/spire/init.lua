@@ -5,7 +5,7 @@ local Color=require('color')
 local Spirte=require('sprite')
 local ui=require('element')
 local path=(...)
-local Combat=require('spire.combat')
+local Combat=require('combat')
 local card=require(path..'.card')
 
 local TODO='sprite attack animation, HP '

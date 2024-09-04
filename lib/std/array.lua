@@ -13,7 +13,7 @@ function Array:new(...)
         if args.name=='Array' then
             return args:clone()
         end
-        if type(args)~='table' then
+        if args.name or type(args)~='table' then
             args={args}
         end
     end

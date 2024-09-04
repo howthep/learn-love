@@ -5,7 +5,7 @@ local Card = prototype { name = 'card' }
 ---comment
 ---@param config table {text,style,spire}
 function Card:new(config)
-    local text = config.text
+    local text = config.description
     -- config.text=nil
     local r = math.random()
     local g = math.random()
@@ -48,7 +48,7 @@ function Card:use()
     print('unwritten use function')
 end
 function Card:__tostring()
-    return self.text
+    return self.description
 end
 
 function Card:on_hover(x, y)
@@ -106,14 +106,14 @@ local bottom_cards= {
                 -- bg = Color(1, 0, .5),
             },
             children = {
-                Card { text = 'strike 3',damage=3,
+                Card { description = 'strike 3',damage=3,
                     spire = Spire, range = 1, target = 'enemy',
                     img='strike.png',
                     use = function(self,config)
                         config.target:hurt(self.damage)
                     end
                 },
-                Card { text = 'move 2',
+                Card { description = 'move 2',
                 spire = Spire, range = 2, target = 'space',
                 img='move.png',
                     use = function(self, config)

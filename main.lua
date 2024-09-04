@@ -1,3 +1,4 @@
+local rectsize = require "data.rectsize"
 -- require('lldebugger').start()
 print(_VERSION)
 local Vec= require("vec")
@@ -27,13 +28,16 @@ end
 
 function love.load()
     print('load')
+    -- timer.oneshot(function (t)
+    --     print(t,'oneshot')
+    -- end,1000)
     -- local w,h,_=love.window.getMode()
     -- love.mouse.setPosition(w/2,h/2)
     -- pen.size=Vec(200,200)
     -- pen:push(Shape.Line(pen.center,Vec(100,100)))
 end
 function love.resize(w,h)
-    -- scene.ui.content.wi
+    spire.content=rectsize(0,0,w,h)
 end
 function love.mousereleased(x,y)
 end

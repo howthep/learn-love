@@ -4,7 +4,31 @@ local pen=require('pen')
 local Color=require('color')
 local timer=require('timer')
 ---@class Sprite
+---@field center Vec2
 local Sprite =prototype{name='Sprite',center=Vec()}
+function Sprite:attack(enemy)
+    enemy=enemy[1]
+    print('attack',enemy)
+    timer.interval(function (time)
+        local end_time=.6
+        if time>end_time then
+            self.attack_draw=function ()
+            end
+            enemy:hurt(2)
+            return true
+        end
+        self.attack_draw = function()
+            local deg90=math.pi/2
+            local rotate=math.cos(time/end_time*deg90)*-90
+            self.rotation=rotate*math.pi/180
+            love.graphics.setColor(1, 0, 0)
+            love.graphics.setLineWidth(5)
+            local x, y = self.center:unpack()
+            local end_vec = self.center + (enemy.center - self.center):rotate(rotate, true) * 1.5
+            love.graphics.line(x, y, end_vec:unpack())
+        end
+    end)
+end
 
 function Sprite:new(center,img_path,width,ops)
     self.center=center
@@ -13,6 +37,7 @@ function Sprite:new(center,img_path,width,ops)
     self.iw,self.ih=self.img:getWidth(),self.img:getHeight()
     self.width=width  or self.iw
     self.rotation=0
+    self.range=1
     self.color=Color()
     -- quad
     if ops then
@@ -36,9 +61,6 @@ function Sprite:new(center,img_path,width,ops)
     end
 
 end
-function Sprite:move(velocity)
-    self.center=self.center+velocity
-end
 function Sprite:draw(frame_id)
     -- print('draw start')
     love.graphics.setColor(self.color:table())
@@ -59,6 +81,7 @@ function Sprite:draw(frame_id)
     if self.hurt_info then
         self:show_hurt(self.hurt_info)
     end
+    self:attack_draw()
 end
 function Sprite:show_hurt(config)
     local x,y=self.center:unpack()
@@ -70,6 +93,9 @@ function Sprite:show_hurt(config)
         width=self.width,
         size=40
     }
+end
+function Sprite:attack_draw()
+    
 end
 function Sprite:hurt(damage)
     print('damage',damage)

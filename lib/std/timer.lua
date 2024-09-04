@@ -14,6 +14,12 @@ function timer.interval(func,period_ms)
         times=0,
     }
 end
+function timer.oneshot(func,delay_ms)
+    timer.interval(function (...)
+        func(...)
+        return true
+    end,delay_ms)
+end
 function timer.update(t)
     TIME=TIME+t
 

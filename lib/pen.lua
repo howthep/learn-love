@@ -1,4 +1,4 @@
----@diagnostic disable: param-type-mismatch, undefined-global
+---@diagnostic disable: param-type-mismatch, undefined-global, lowercase-global
 -- draw everything
 -- normal coordinate [-1,1]
 -- manage drawing, coloring, font
@@ -7,6 +7,7 @@ local Vec=require('vec')
 local Pen={}
 local Fonts={}
 local Imgs={}
+local Sounds={}
 function Pen.bezier(bezier)
     love.graphics.setColor(1, 1, 1)
     love.graphics.setLineWidth(4)
@@ -142,6 +143,7 @@ function Pen.img(config)
     love.graphics.setColor(color:table())
     local w,h=img:getWidth(),img:getHeight()
     local scale=width/w
+    -- scale=1
     love.graphics.draw(img,x,y,0,scale,scale)
     ---text,x,y,limit,align, rotate,scale_x,scale_y,offset_x,offset_y, shearing
     -- love.graphics.printf(text,x,y,limit,align,0,1,1,0,0)
@@ -155,9 +157,23 @@ function Pen.get_font(size)
 end
 function Pen.get_img(img_path)
     if not Imgs[img_path] then
-        Imgs[img_path]=love.graphics.newImage(img_path)
+        local img=love.graphics.newImage(img_path,{
+            -- mipmaps=true
+        })
+        Imgs[img_path]=img
+        -- Imgs[img_path]:setFilter('nearest','nearest',8)
     end
     return Imgs[img_path]
     
+end
+function Pen.get_sound(sound_path,type_)
+    if not Sounds[sound_path] then
+        if not io.open(sound_path) then
+            error(sound_path..' not exist. ')
+        end
+        local sound=love.audio.newSource(sound_path,type_ or 'static')
+        Sounds[sound_path]=sound
+    end
+    return Sounds[sound_path]
 end
 return Pen
